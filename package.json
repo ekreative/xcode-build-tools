@@ -1,0 +1,16 @@
+{
+  "name": "xcode-build-tools",
+  "version": "1.0.0",
+  "description": "A few bash scripts to help with building ios apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "xcode",
+    "ios",
+    "build"
+  ],
+  "author": "Fred Cox <mcfedr@gmail.com>",
+  "license": "MIT"
+}

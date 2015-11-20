@@ -1,0 +1,5 @@
+#!/bin/sh
+OUTPUTDIR="$PWD/build/Release-iphoneos"
+MESSAGE=`git log --format=%B -n 1`
+echo "Uploading build"
+curl -sS -w "\n" -X POST -H "X-API-Key: $TEST_BUILD_ROCKS_KEY" -F "ci=true" -F "comment=$MESSAGE" -F "app=@$OUTPUTDIR/$APP_NAME.ipa" "https://testbuild.rocks/api/builds/upload/$PROJECT_ID/ios"
