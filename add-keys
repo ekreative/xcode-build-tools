@@ -16,9 +16,9 @@ security unlock-keychain -p gitlab "$APP_NAME.keychain"
 security set-keychain-settings -t 3600 -l "$APP_NAME.keychain"
 
 # Add certificates to keychain and allow codesign to access them
-security import ./signing/apple.cer -k "$APP_NAME.keychain" -T /usr/bin/codesign
-security import ./signing/dist.cer -k "$APP_NAME.keychain" -T /usr/bin/codesign
-security import ./signing/dist.p12 -k "$APP_NAME.keychain" -P $KEY_PASSWORD -T /usr/bin/codesign
+security import $APP_CERT -k "$APP_NAME.keychain" -T /usr/bin/codesign
+security import $APP_CERT -k "$APP_NAME.keychain" -T /usr/bin/codesign
+security import $APP_KEY -k "$APP_NAME.keychain" -P $KEY_PASSWORD -T /usr/bin/codesign
 
 # Put the provisioning profile in place
 mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
