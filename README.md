@@ -3,8 +3,8 @@
 ## Env vars
 
 * `$APP_NAME` - Name of the app to build eg "Kidslox"
-* `$PROFILE_NAME` - Name of the provisioning profile eg "a2a9039c-05c6-470b-ad13-a19e5a63b6f1"
-* `$PROFILE` - Location of provisioning profile
+* `$PROVISIONING_PROFILE_NAME` - Name of the provisioning profile eg "a2a9039c-05c6-470b-ad13-a19e5a63b6f1"
+* `$PROVISIONING_PROFILE` - Location of provisioning profile
 * `$APPLE_CER` - Location of the apple wwdr cert
 * `$APP_CER` - Location of your signing cert
 * `$APP_KEY` - Location of the matching key

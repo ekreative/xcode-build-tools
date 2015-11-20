@@ -1,3 +1,3 @@
 #!/bin/sh
 security delete-keychain "$APP_NAME.keychain"
-rm -f "~/Library/MobileDevice/Provisioning Profiles/$PROFILE_NAME.mobileprovision"
+rm -f "~/Library/MobileDevice/Provisioning Profiles/$PROVISIONING_PROFILE_NAME.mobileprovision"
