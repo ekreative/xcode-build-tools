@@ -22,4 +22,4 @@ security import $APP_KEY -k "$APP_NAME.keychain" -P $KEY_PASSWORD -T /usr/bin/co
 
 # Put the provisioning profile in place
 mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-cp "./signing/$PROFILE_NAME.mobileprovision" ~/Library/MobileDevice/Provisioning\ Profiles/
+cp $PROFILE ~/Library/MobileDevice/Provisioning\ Profiles/
