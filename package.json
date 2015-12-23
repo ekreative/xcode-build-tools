@@ -17,7 +17,8 @@
     "add-keys": "./add-keys",
     "create-ipa": "./create-ipa",
     "remove-keys": "./remove-keys",
-    "upload-ipa": "./upload-ipa.js"
+    "upload-ipa": "./upload-ipa.js",
+    "upload-apk": "./upload-apk.js"
   },
   "dependencies": {
     "form-data": "^1.0.0-rc3",
