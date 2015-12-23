@@ -13,7 +13,7 @@ const projectId = process.env.PROJECT_ID,
     appName = process.env.APP_NAME,
     message = child_process.execSync('git log --format=%B -n 1'),
     testBuildRocksKey = process.env.TEST_BUILD_ROCKS_KEY,
-    slackHook = process.env.SLACK_HOOK || 'https://hooks.slack.com/services/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',
+    slackHook = process.env.SLACK_HOOK,
     slackChannel = process.env.SLACK_CHANNEL;
 
 winston.info('Uploading build');
@@ -65,7 +65,7 @@ fetch(`https://testbuild.rocks/api/builds/upload/${projectId}/ios`, {
                             },
                             {
                                 title: 'Date',
-                                value: moment.unix(json.date).fromNow(),
+                                value: moment.unix(json.date).format('llll'),
                                 short: true
                             },
                             {
