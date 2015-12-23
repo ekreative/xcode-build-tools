@@ -84,6 +84,7 @@ fetch(`https://testbuild.rocks/api/builds/upload/${projectId}/ios`, {
     .then(res => {
         if (res.status == 200) {
             winston.info('Sent to Slack');
+            return;
         }
         throw res;
     })
