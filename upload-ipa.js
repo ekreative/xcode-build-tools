@@ -27,6 +27,8 @@ const projectId = program.projectId,
     slackHook = program.slackHook,
     slackChannel = program.slackChannel;
 
+winston.info('Uploading build');
+
 let data = new FormData();
 data.append('app', fs.createReadStream(`${outputDir}/${appName}.ipa`));
 data.append('comment', message);
@@ -43,11 +45,11 @@ var result = fetch(`https://testbuild.rocks/api/builds/upload/${projectId}/ios`,
         if (res.status == 200) {
             return res;
         }
-        throw res;
+        throw new Error('Failed to upload build to testbuild.rocks');
     });
 if (slackHook) {
     result = result.then(slack(slackHook, slackChannel));
 }
 result.catch(err => {
-    winston.error('Error uploading build', {err});
+    winston.error('Error', {err});
 });
