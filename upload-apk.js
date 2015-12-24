@@ -6,15 +6,25 @@ const fetch = require('node-fetch'),
     fs = require('fs'),
     child_process = require('child_process'),
     winston = require('winston'),
+    program = require('commander'),
 
     slack = require('./lib/slack');
 
-const projectId = process.env.PROJECT_ID,
-    projectFolder = process.env.PROJECT_FOLDER,
+program
+    .version(require('./package.json').version)
+    .option('-p, --project-id <id>', 'Project Id', parseInt, process.env.PROJECT_ID)
+    .option('-f, --project-folder <folder>', 'Project folder', process.env.PROJECT_FOLDER)
+    .option('-k, --key <key>', 'Test build rocks key', process.env.TEST_BUILD_ROCKS_KEY)
+    .option('-s, --slack-hook <hook>', 'Slack Hook', process.env.SLACK_HOOK)
+    .option('-c, --slack-channel <channel>', 'Slack Channel', process.env.SLACK_CHANNEL)
+    .parse(process.argv);
+
+const projectId = program.projectId,
+    projectFolder = project.projectFolder,
     message = child_process.execSync('git log --format=%B -n 1'),
-    testBuildRocksKey = process.env.TEST_BUILD_ROCKS_KEY,
-    slackHook = process.env.SLACK_HOOK,
-    slackChannel = process.env.SLACK_CHANNEL;
+    testBuildRocksKey = program.key,
+    slackHook = program.slackHook,
+    slackChannel = program.slackChannel;
 
 winston.info('Uploading build');
 

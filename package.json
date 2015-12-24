@@ -21,6 +21,7 @@
     "upload-apk": "./upload-apk.js"
   },
   "dependencies": {
+    "commander": "^2.9.0",
     "form-data": "^1.0.0-rc3",
     "moment": "^2.10.6",
     "node-fetch": "^1.3.3",
