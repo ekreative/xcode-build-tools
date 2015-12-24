@@ -25,5 +25,14 @@
     "moment": "^2.10.6",
     "node-fetch": "^1.3.3",
     "winston": "^2.1.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ekreative/ios-build-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ekreative/ios-build-tools/issues"
+  },
+  "homepage": "https://github.com/ekreative/ios-build-tools#readme"
 }
