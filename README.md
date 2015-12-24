@@ -1,4 +1,6 @@
-# Xcode build tools
+# iOS build tools
+
+A few scripts for our CI server
 
 ## Env vars
 
