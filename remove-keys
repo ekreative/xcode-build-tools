@@ -1,3 +1,7 @@
 #!/bin/sh
 security delete-keychain "$APP_NAME.keychain"
-rm -f "~/Library/MobileDevice/Provisioning Profiles/$PROVISIONING_PROFILE_NAME.mobileprovision"
+if [ -z "$PROVISIONING_PROFILE" ]; then
+  echo "Skipping profile install";
+else
+  rm -f "~/Library/MobileDevice/Provisioning Profiles/$PROVISIONING_PROFILE_NAME.mobileprovision"
+fi

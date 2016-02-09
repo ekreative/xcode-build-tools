@@ -21,5 +21,9 @@ security import $APP_CERT -k "$APP_NAME.keychain" -T /usr/bin/codesign
 security import $APP_KEY -k "$APP_NAME.keychain" -P $KEY_PASSWORD -T /usr/bin/codesign
 
 # Put the provisioning profile in place
-mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-cp $PROVISIONING_PROFILE ~/Library/MobileDevice/Provisioning\ Profiles/$PROVISIONING_PROFILE_NAME.mobileprovision
+if [ -z "$PROVISIONING_PROFILE" ]; then
+  echo "Skipping profile install";
+else
+  mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+  cp $PROVISIONING_PROFILE ~/Library/MobileDevice/Provisioning\ Profiles/$PROVISIONING_PROFILE_NAME.mobileprovision
+fi
