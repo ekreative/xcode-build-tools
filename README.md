@@ -1,5 +1,7 @@
 # iOS build tools
 
+**WARNING: This package has been renamed as [xcode-build-tools](https://www.npmjs.com/package/xcode-build-tools) to better reflect its general usefulness**
+
 A few scripts for our CI server
 
 ## Env vars
