@@ -1,4 +1,4 @@
-# iOS build tools
+# Xcode build tools
 
 A few scripts for our CI server
 
