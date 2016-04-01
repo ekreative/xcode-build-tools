@@ -20,7 +20,7 @@ program
     .parse(process.argv);
 
 const projectId = program.projectId,
-    projectFolder = project.projectFolder,
+    projectFolder = program.projectFolder,
     message = child_process.execSync('git log --format=%B -n 1'),
     testBuildRocksKey = program.key,
     slackHook = program.slackHook,
