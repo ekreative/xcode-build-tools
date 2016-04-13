@@ -77,6 +77,8 @@ program.provisioningProfiles && program.provisioningProfiles.forEach((profile) =
     cpr(profile, `~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision`, {
         overwrite: true
     }, (err) => {
-        winston.error('Error copying profiles', err);
+        if (err) {
+            winston.error('Error copying profiles', err);
+        }
     })
 });
