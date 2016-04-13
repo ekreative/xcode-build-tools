@@ -6,17 +6,19 @@ const winston = require('winston'),
     cpr = require('cpr'),
     path = require('path'),
 
-    exec = require('./lib/exec');
+    exec = require('./lib/exec'),
+
+    list = (val) => val.split(',');
 
 program
     .version(require('./package.json').version)
     .option('-k, --keychain-name <name>', 'Keychain Name', parseInt, process.env.APP_NAME || 'build-tools')
     .option('--timeout <timeout>', 'Keychain password timeout', 3600)
     .option('--apple-cert <cert>', 'App sigining certificate', process.env.APPLE_CERT)
-    .option('--app-certs <cert>', 'App sigining certificates', (val) => val.split(','), process.env.APP_CERT)
-    .option('--app-keys <key>', 'App sigining keys', (val) => val.split(','), process.env.APP_KEY)
+    .option('--app-certs <cert>', 'App sigining certificates', list, list(process.env.APP_CERT))
+    .option('--app-keys <key>', 'App sigining keys', list, list(process.env.APP_KEY))
     .option('--app-key-password <pass>', 'App sigining key password', process.env.KEY_PASSWORD)
-    .option('--provisioning-profiles <profile>', 'Provisioning profiles', (val) => val.split(','), process.env.PROVISIONING_PROFILE)
+    .option('--provisioning-profiles <profile>', 'Provisioning profiles', list, list(process.env.PROVISIONING_PROFILE))
     .parse(process.argv);
 
 const commands = [
