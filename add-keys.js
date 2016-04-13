@@ -17,7 +17,7 @@ program
     .option('--apple-cert <cert>', 'App sigining certificate', process.env.APPLE_CERT)
     .option('--app-certs <cert>', 'App sigining certificates', list, list(process.env.APP_CERT))
     .option('--app-keys <key>', 'App sigining keys', list, list(process.env.APP_KEY))
-    .option('--app-key-password <pass>', 'App sigining key password', process.env.KEY_PASSWORD)
+    .option('--app-key-passwords <pass>', 'App sigining key password or passwords', list, list(process.env.KEY_PASSWORD))
     .option('--provisioning-profiles <profile>', 'Provisioning profiles', list, list(process.env.PROVISIONING_PROFILE))
     .option('--codesign <programs>', 'Programs that should be able to use the certificates', list, [
         '/usr/bin/codesign',
@@ -59,10 +59,11 @@ program.appCerts && program.appCerts.forEach((appCert) => {
     );
 });
 
-program.appKeys && program.appKeys.forEach((appKey) => {
-    if (program.appKeyPassword) {
+program.appKeys && program.appKeys.forEach((appKey, idx) => {
+    const password = program.appKeyPassword[idx] || program.appKeyPassword[0];
+    if (password) {
         commands.push(
-            `security import "${appKey}" -k "${program.keychainName}.keychain" -P "${program.appKeyPassword}" ${codesign}`
+            `security import "${appKey}" -k "${program.keychainName}.keychain" -P "${password}" ${codesign}`
         );
     } else {
         commands.push(
