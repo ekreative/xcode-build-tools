@@ -15,7 +15,7 @@
   "license": "MIT",
   "bin": {
     "add-keys": "./add-keys.js",
-    "create-ipa": "./create-ipa",
+    "create-ipa": "./create-ipa.js",
     "remove-keys": "./remove-keys.js",
     "upload-ipa": "./upload-ipa.js",
     "upload-apk": "./upload-apk.js"
@@ -24,7 +24,7 @@
     "commander": "^2.9.0",
     "cpr": "^1.1.1",
     "del": "^2.2.0",
-    "form-data": "^1.0.0-rc3",
+    "form-data": "^1.0.0-rc4",
     "moment": "^2.10.6",
     "node-fetch": "^1.3.3",
     "winston": "^2.1.1"
