@@ -14,7 +14,7 @@
   "author": "Fred Cox <mcfedr@gmail.com>",
   "license": "MIT",
   "bin": {
-    "add-keys": "./add-keys",
+    "add-keys": "./add-keys.js",
     "create-ipa": "./create-ipa",
     "remove-keys": "./remove-keys",
     "upload-ipa": "./upload-ipa.js",
