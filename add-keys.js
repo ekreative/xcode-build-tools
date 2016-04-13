@@ -22,7 +22,8 @@ program
     .parse(process.argv);
 
 const commands = [
-    `security create-keychain -p gitlab "${program.keychainName}.keychain" || :`, // Create a custom keychain
+    `security delete-keychain "${program.keychainName}.keychain" || :`, // delete existing keychain
+    `security create-keychain -p gitlab "${program.keychainName}.keychain"`, // Create a custom keychain
     `security list-keychains -s "${program.keychainName}.keychain"`, // Add it to the list
     `security default-keychain -s "${program.keychainName}.keychain"`, // Make the custom keychain default, so xcodebuild will use it for signing
     `security unlock-keychain -p gitlab "${program.keychainName}.keychain"`, // Unlock the keychain
