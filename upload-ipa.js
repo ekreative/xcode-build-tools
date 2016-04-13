@@ -13,7 +13,7 @@ const fetch = require('node-fetch'),
 program
     .version(require('./package.json').version)
     .option('-p, --project-id <id>', 'Project Id', process.env.PROJECT_ID)
-    .option('--ipa <name>', 'Ipa file to upload', `${process.cwd()}/build/Release-iphoneos` + (process.env.APP_NAME ? `${process.env.APP_NAME}.ipa` : 'app.ipa'))
+    .option('--ipa <name>', 'Ipa file to upload', `${process.cwd()}/build/Release-iphoneos/` + (process.env.APP_NAME ? `${process.env.APP_NAME}.ipa` : 'app.ipa'))
     .option('--key <key>', 'Test build rocks key', process.env.TEST_BUILD_ROCKS_KEY)
     .option('-s, --slack-hook <hook>', 'Slack Hook', process.env.SLACK_HOOK)
     .option('-c, --slack-channel <channel>', 'Slack Channel', process.env.SLACK_CHANNEL)
