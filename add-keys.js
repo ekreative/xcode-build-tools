@@ -12,8 +12,8 @@ const winston = require('winston'),
 
 program
     .version(require('./package.json').version)
-    .option('-k, --keychain-name <name>', 'Keychain Name', parseInt, process.env.APP_NAME || 'build-tools')
-    .option('--timeout <timeout>', 'Keychain password timeout', 3600)
+    .option('-k, --keychain-name <name>', 'Keychain Name', process.env.APP_NAME || 'build-tools')
+    .option('--timeout <timeout>', 'Keychain password timeout', parseInt, 3600)
     .option('--apple-cert <cert>', 'App sigining certificate', process.env.APPLE_CERT)
     .option('--app-certs <cert>', 'App sigining certificates', list, list(process.env.APP_CERT))
     .option('--app-keys <key>', 'App sigining keys', list, list(process.env.APP_KEY))

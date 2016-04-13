@@ -12,7 +12,7 @@ const winston = require('winston'),
 
 program
     .version(require('./package.json').version)
-    .option('-k, --keychain-name <name>', 'Keychain Name', parseInt, process.env.APP_NAME || 'build-tools')
+    .option('-k, --keychain-name <name>', 'Keychain Name', process.env.APP_NAME || 'build-tools')
     .option('--provisioning-profiles <profile>', 'Provisioning profiles', list, list(process.env.PROVISIONING_PROFILE))
     .parse(process.argv);
 
