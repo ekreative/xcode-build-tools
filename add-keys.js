@@ -32,7 +32,7 @@ const commands = [
 
 // Add certificates to keychain and allow codesign to access them
 if (program.appleCert) {
-    commands.push(`security import apple.cer -k "${program.keychainName}.keychain" -T /usr/bin/codesign`);
+    commands.push(`security import ${program.appleCert} -k "${program.keychainName}.keychain" -T /usr/bin/codesign`);
 } else {
     commands.push(
         'curl https://developer.apple.com/certificationauthority/AppleWWDRCA.cer > apple.cer',
