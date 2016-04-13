@@ -19,16 +19,17 @@ program
 let create = (developerName) => {
     let name = path.basename(program.provisioningProfile, path.extname(program.provisioningProfile));
 
-    let commandPromise = exec(`xcrun -log -sdk iphoneos PackageApplication "${program.app}" -o "${program.ipa}" -sign "${developerName}" -embed "~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision"`);
-
-    commandPromise.catch((err) => {
-        winston.error('Error creating ipa', err);
-    });
-
+    return exec(`xcrun -log -sdk iphoneos PackageApplication "${program.app}" -o "${program.ipa}" -sign "${developerName}" -embed "~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision"`);
 };
 
+let commandPromise;
+
 if (program.developerName) {
-    create(program.developerName);
+    commandPromise = create(program.developerName);
 } else {
-    find(program.keychainName).then(create);
+    commandPromise = find(program.keychainName).then(create);
 }
+
+commandPromise.catch((err) => {
+    winston.error('Error creating ipa', err);
+});
