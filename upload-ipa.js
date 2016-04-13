@@ -13,32 +13,25 @@ const fetch = require('node-fetch'),
 program
     .version(require('./package.json').version)
     .option('-p, --project-id <id>', 'Project Id', process.env.PROJECT_ID)
-    .option('-n, --app-name <name>', 'App name', process.env.APP_NAME)
-    .option('-k, --key <key>', 'Test build rocks key', process.env.TEST_BUILD_ROCKS_KEY)
+    .option('--ipa <name>', 'Ipa file to upload', `${process.cwd()}/build/Release-iphoneos` + (process.env.APP_NAME ? `${process.env.APP_NAME}.ipa` : 'app.ipa'))
+    .option('--key <key>', 'Test build rocks key', process.env.TEST_BUILD_ROCKS_KEY)
     .option('-s, --slack-hook <hook>', 'Slack Hook', process.env.SLACK_HOOK)
     .option('-c, --slack-channel <channel>', 'Slack Channel', process.env.SLACK_CHANNEL)
+    .option('-m, --message <message>', 'Test build rocks message', child_process.execSync('git log --format=%B -n 1 || echo "No comment"'))
     .parse(process.argv);
-
-const projectId = program.projectId,
-    outputDir = `${process.cwd()}/build/Release-iphoneos`,
-    appName = program.appName,
-    message = child_process.execSync('git log --format=%B -n 1'),
-    testBuildRocksKey = program.key,
-    slackHook = program.slackHook,
-    slackChannel = program.slackChannel;
 
 winston.info('Uploading build');
 
 let data = new FormData();
-data.append('app', fs.createReadStream(`${outputDir}/${appName}.ipa`));
-data.append('comment', message);
+data.append('app', fs.createReadStream(program.ipa));
+data.append('comment', program.message);
 data.append('ci', 'true');
 
-var result = fetch(`https://testbuild.rocks/api/builds/upload/${projectId}/ios`, {
+var result = fetch(`https://testbuild.rocks/api/builds/upload/${program.projectId}/ios`, {
     method: 'POST',
     body: data,
     headers: {
-        'X-API-Key': testBuildRocksKey
+        'X-API-Key': program.key
     }
 })
     .then(res => {
@@ -47,8 +40,8 @@ var result = fetch(`https://testbuild.rocks/api/builds/upload/${projectId}/ios`,
         }
         throw new Error('Failed to upload build to testbuild.rocks');
     });
-if (slackHook) {
-    result = result.then(slack(slackHook, slackChannel));
+if (program.slackHook) {
+    result = result.then(slack(program.slackHook, program.slackChannel));
 }
 result.catch(err => {
     winston.error('Error', {err});
