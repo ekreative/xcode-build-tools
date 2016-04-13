@@ -14,7 +14,8 @@ program
     .option('--provisioning-profile <profile>', 'Provisioning profile', process.env.PROVISIONING_PROFILE)
     .parse(process.argv);
 
-let commandPromise = exec(`xcrun -log -sdk iphoneos PackageApplication "${program.app}" -o "${program.ipa}" -sign "${program.developerName}" -embed "${program.provisioningProfile}"`);
+let name = path.basename(program.provisioningProfile, path.extname(program.provisioningProfile));
+let commandPromise = exec(`xcrun -log -sdk iphoneos PackageApplication "${program.app}" -o "${program.ipa}" -sign "${program.developerName}" -embed "~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision"`);
 
 commandPromise.catch((err) => {
     winston.error('Error creating ipa', err);
