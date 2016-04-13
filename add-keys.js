@@ -39,14 +39,14 @@ const commands = [
         // Set keychain timeout to 1 hour for long builds
         `security set-keychain-settings -t ${program.timeout} -l "${program.keychainName}.keychain"`
     ],
-    codesign = program.codesign.map((p) => `-T ${p}`).join(' ');
+    codesign = program.codesign.map((p) => `-T "${p}"`).join(' ');
 
 // Add the Apple developer root cert
 if (program.appleCert) {
-    commands.push(`security import ${program.appleCert} -k "${program.keychainName}.keychain" ${codesign}`);
+    commands.push(`security import "${program.appleCert}" -k "${program.keychainName}.keychain" ${codesign}`);
 } else {
     commands.push(
-        'curl https://developer.apple.com/certificationauthority/AppleWWDRCA.cer > apple.cer',
+        'curl "https://developer.apple.com/certificationauthority/AppleWWDRCA.cer" > apple.cer',
         `security import apple.cer -k "${program.keychainName}.keychain" ${codesign}`,
         `rm apple.cer`
     );
@@ -55,18 +55,18 @@ if (program.appleCert) {
 // Add certificates to keychain and allow codesign to access them
 program.appCerts && program.appCerts.forEach((appCert) => {
     commands.push(
-        `security import ${appCert} -k "${program.keychainName}.keychain" ${codesign}`
+        `security import "${appCert}" -k "${program.keychainName}.keychain" ${codesign}`
     );
 });
 
 program.appKeys && program.appKeys.forEach((appKey) => {
     if (program.appKeyPassword) {
         commands.push(
-            `security import ${appKey} -k "${program.keychainName}.keychain" -P ${program.appKeyPassword} ${codesign}`
+            `security import "${appKey}" -k "${program.keychainName}.keychain" -P "${program.appKeyPassword}" ${codesign}`
         );
     } else {
         commands.push(
-            `security import ${appKey} -k "${program.keychainName}.keychain" ${codesign}`
+            `security import "${appKey}" -k "${program.keychainName}.keychain" ${codesign}`
         );
     }
 });
