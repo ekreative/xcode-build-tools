@@ -19,42 +19,54 @@ program
     .option('--app-keys <key>', 'App sigining keys', list, list(process.env.APP_KEY))
     .option('--app-key-password <pass>', 'App sigining key password', process.env.KEY_PASSWORD)
     .option('--provisioning-profiles <profile>', 'Provisioning profiles', list, list(process.env.PROVISIONING_PROFILE))
+    .option('--codesign <programs>', 'Programs that should be able to use the certificates', list, [
+        '/usr/bin/codesign',
+        '/usr/bin/productbuild'
+    ])
     .parse(process.argv);
 
 const commands = [
-    `security delete-keychain "${program.keychainName}.keychain" || :`, // delete existing keychain
-    `security create-keychain -p gitlab "${program.keychainName}.keychain"`, // Create a custom keychain
-    `security list-keychains -s "${program.keychainName}.keychain"`, // Add it to the list
-    `security default-keychain -s "${program.keychainName}.keychain"`, // Make the custom keychain default, so xcodebuild will use it for signing
-    `security unlock-keychain -p gitlab "${program.keychainName}.keychain"`, // Unlock the keychain
-    `security set-keychain-settings -t ${program.timeout} -l "${program.keychainName}.keychain"` // Set keychain timeout to 1 hour for long builds
-];
+        // delete existing keychain
+        `security delete-keychain "${program.keychainName}.keychain" || :`,
+        // Create a custom keychain
+        `security create-keychain -p gitlab "${program.keychainName}.keychain"`,
+        // Add it to the list
+        `security list-keychains -s "${program.keychainName}.keychain"`,
+        // Make the custom keychain default, so xcodebuild will use it for signing
+        `security default-keychain -s "${program.keychainName}.keychain"`,
+        // Unlock the keychain
+        `security unlock-keychain -p gitlab "${program.keychainName}.keychain"`,
+        // Set keychain timeout to 1 hour for long builds
+        `security set-keychain-settings -t ${program.timeout} -l "${program.keychainName}.keychain"`
+    ],
+    codesign = program.codesign.map((p) => `-T ${p}`).join(' ');
 
-// Add certificates to keychain and allow codesign to access them
+// Add the Apple developer root cert
 if (program.appleCert) {
-    commands.push(`security import ${program.appleCert} -k "${program.keychainName}.keychain" -T /usr/bin/codesign`);
+    commands.push(`security import ${program.appleCert} -k "${program.keychainName}.keychain" ${codesign}`);
 } else {
     commands.push(
         'curl https://developer.apple.com/certificationauthority/AppleWWDRCA.cer > apple.cer',
-        `security import apple.cer -k "${program.keychainName}.keychain" -T /usr/bin/codesign`,
+        `security import apple.cer -k "${program.keychainName}.keychain" ${codesign}`,
         `rm apple.cer`
     );
 }
 
+// Add certificates to keychain and allow codesign to access them
 program.appCerts && program.appCerts.forEach((appCert) => {
     commands.push(
-        `security import ${appCert} -k "${program.keychainName}.keychain" -T /usr/bin/codesign`
+        `security import ${appCert} -k "${program.keychainName}.keychain" ${codesign}`
     );
 });
 
 program.appKeys && program.appKeys.forEach((appKey) => {
     if (program.appKeyPassword) {
         commands.push(
-            `security import ${appKey} -k "${program.keychainName}.keychain" -P ${program.appKeyPassword} -T /usr/bin/codesign`
+            `security import ${appKey} -k "${program.keychainName}.keychain" -P ${program.appKeyPassword} ${codesign}`
         );
     } else {
         commands.push(
-            `security import ${appKey} -k "${program.keychainName}.keychain" -T /usr/bin/codesign`
+            `security import ${appKey} -k "${program.keychainName}.keychain" ${codesign}`
         );
     }
 });
