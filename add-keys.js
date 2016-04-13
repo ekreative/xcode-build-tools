@@ -73,7 +73,9 @@ commandPromise.catch((err) => {
 // Put the provisioning profiles in place
 program.provisioningProfiles && program.provisioningProfiles.forEach((profile) => {
     let name = path.basename(profile, path.extname(profile));
-    cpr(profile, `~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision`, (err) => {
+    cpr(profile, `~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision`, {
+        overwrite: true
+    }, (err) => {
         winston.error('Error copying profiles', err);
     })
 });
