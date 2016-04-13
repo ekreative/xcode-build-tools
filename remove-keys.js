@@ -20,6 +20,7 @@ let commandPromise = exec(`security delete-keychain "${program.keychainName}.key
 
 commandPromise.catch((err) => {
     winston.error('Error deleting keychain', err);
+    process.exit(1);
 });
 
 // Delete the provisioning profiles
@@ -28,6 +29,7 @@ program.provisioningProfiles && program.provisioningProfiles.forEach((profile) =
     del(`~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision`, (err) => {
         if (err) {
             winston.error('Error deleting profiles', err);
+            process.exit(1);
         }
     })
 });

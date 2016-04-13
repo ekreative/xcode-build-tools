@@ -69,6 +69,7 @@ commands.forEach((command) => {
 
 commandPromise.catch((err) => {
     winston.error('Error setting up keychain', err);
+    process.exit(1);
 });
 
 // Put the provisioning profiles in place
@@ -79,6 +80,7 @@ program.provisioningProfiles && program.provisioningProfiles.forEach((profile) =
     }, (err) => {
         if (err) {
             winston.error('Error copying profiles', err);
+            process.exit(1);
         }
     })
 });

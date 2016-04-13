@@ -45,4 +45,5 @@ if (program.slackHook) {
 }
 result.catch(err => {
     winston.error('Error uploading build', {err});
+    process.exit(1);
 });

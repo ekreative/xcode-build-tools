@@ -17,4 +17,5 @@ find(program.keychainName)
     })
     .catch((err) => {
         winston.error('Error finding name', err);
+        process.exit(1);
     });

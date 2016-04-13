@@ -33,4 +33,5 @@ if (program.developerName) {
 
 commandPromise.catch((err) => {
     winston.error('Error creating ipa', err);
+    process.exit(1);
 });

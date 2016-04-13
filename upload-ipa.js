@@ -45,4 +45,5 @@ if (program.slackHook) {
 }
 result.catch(err => {
     winston.error('Error', {err});
+    process.exit(1);
 });
