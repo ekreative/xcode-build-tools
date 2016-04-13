@@ -60,7 +60,7 @@ program.appCerts && program.appCerts.forEach((appCert) => {
 });
 
 program.appKeys && program.appKeys.forEach((appKey, idx) => {
-    const password = program.appKeyPassword[idx] || program.appKeyPassword[0];
+    const password = program.appKeyPasswords[idx] || program.appKeyPasswords[0];
     if (password) {
         commands.push(
             `security import "${appKey}" -k "${program.keychainName}.keychain" -P "${password}" ${codesign}`
