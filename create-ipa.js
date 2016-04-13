@@ -3,6 +3,7 @@
 
 const winston = require('winston'),
     program = require('commander'),
+    path = require('path'),
 
     exec = require('./lib/exec'),
     find = require('./lib/find-identity-name');
