@@ -18,7 +18,8 @@
     "create-ipa": "./create-ipa.js",
     "remove-keys": "./remove-keys.js",
     "upload-ipa": "./upload-ipa.js",
-    "upload-apk": "./upload-apk.js"
+    "upload-apk": "./upload-apk.js",
+    "find-identity-name": "./find-identity-name.js"
   },
   "dependencies": {
     "commander": "^2.9.0",
