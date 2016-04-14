@@ -13,6 +13,7 @@ const fetch = require('node-fetch'),
 program
     .version(require('./package.json').version)
     .option('-p, --project-id <id>', 'Project Id', process.env.PROJECT_ID)
+    .option('--server <name>', 'Alternative server address', 'https://testbuild.rocks')
     .option('--ipa <name>', 'Ipa file to upload', `${process.cwd()}/build/Release-iphoneos/` + (process.env.APP_NAME ? `${process.env.APP_NAME}.ipa` : 'app.ipa'))
     .option('--key <key>', 'Test build rocks key', process.env.TEST_BUILD_ROCKS_KEY)
     .option('-s, --slack-hook <hook>', 'Slack Hook', process.env.SLACK_HOOK)
@@ -27,11 +28,12 @@ data.append('app', fs.createReadStream(program.ipa));
 data.append('comment', program.message);
 data.append('ci', 'true');
 
-var result = fetch(`https://testbuild.rocks/api/builds/upload/${program.projectId}/ios`, {
+var result = fetch(`${program.server}/api/builds/upload/${program.projectId}/ios`, {
     method: 'POST',
     body: data,
     headers: {
-        'X-API-Key': program.key
+        'X-API-Key': program.key,
+        'content-length': null //Work around until https://github.com/bitinn/node-fetch/issues/102
     }
 })
     .then(res => {
