@@ -38,12 +38,14 @@ var result = fetch(`https://testbuild.rocks/api/builds/upload/${program.projectI
         if (res.status == 200) {
             return res;
         }
-        throw res;
+        return res.text().then((body) => {
+            throw new Error(`Failed to upload build to testbuild.rocks [${body}]`);
+        });
     });
 if (program.slackHook) {
     result = result.then(slack(program.slackHook, program.slackChannel));
 }
 result.catch(err => {
-    winston.error('Error uploading build', {err});
+    winston.error('Error uploading apk', err);
     process.exit(1);
 });

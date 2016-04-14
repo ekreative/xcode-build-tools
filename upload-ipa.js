@@ -38,12 +38,14 @@ var result = fetch(`https://testbuild.rocks/api/builds/upload/${program.projectI
         if (res.status == 200) {
             return res;
         }
-        throw new Error('Failed to upload build to testbuild.rocks');
+        return res.text().then((body) => {
+            throw new Error(`Failed to upload build to testbuild.rocks [${body}]`);
+        });
     });
 if (program.slackHook) {
     result = result.then(slack(program.slackHook, program.slackChannel));
 }
 result.catch(err => {
-    winston.error('Error', {err});
+    winston.error('Error uploading ipa', err);
     process.exit(1);
 });
