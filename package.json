@@ -1,6 +1,6 @@
 {
   "name": "xcode-build-tools",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "description": "A few bash scripts to help with building ios apps",
   "main": "index.js",
   "scripts": {
