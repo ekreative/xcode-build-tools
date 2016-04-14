@@ -27,6 +27,8 @@ data.append('app', fs.createReadStream(program.apk));
 data.append('comment', program.message);
 data.append('ci', 'true');
 
+data.getLengthSync = null; //Work around until https://github.com/bitinn/node-fetch/issues/102
+
 var result = fetch(`https://testbuild.rocks/api/builds/upload/${program.projectId}/android`, {
     method: 'POST',
     body: data,
