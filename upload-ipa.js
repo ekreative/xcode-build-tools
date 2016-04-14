@@ -28,12 +28,13 @@ data.append('app', fs.createReadStream(program.ipa));
 data.append('comment', program.message);
 data.append('ci', 'true');
 
+data.getLengthSync = null; //Work around until https://github.com/bitinn/node-fetch/issues/102
+
 var result = fetch(`${program.server}/api/builds/upload/${program.projectId}/ios`, {
     method: 'POST',
     body: data,
     headers: {
-        'X-API-Key': program.key,
-        'content-length': null //Work around until https://github.com/bitinn/node-fetch/issues/102
+        'X-API-Key': program.key
     }
 })
     .then(res => {
