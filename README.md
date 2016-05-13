@@ -11,6 +11,6 @@ A few scripts for our CI server
 * `$APP_CER` - Location of your signing cert
 * `$APP_KEY` - Location of the matching key
 * `$KEY_PASSWORD` - Password to the signing key
-* `$DEVELOPER_NAME` - Name of the developer eg 'iPhone Distribution: Kidslox Limited'
+* `CODE_SIGN_IDENTITY` - Name of the developer eg 'iPhone Distribution: Kidslox Limited'
 * `$TEST_BUILD_ROCKS_KEY` - API key for testbuild.rocks to upload
 * `$PROJECT_ID` - Project id for testbuild.rocks
