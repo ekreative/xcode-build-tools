@@ -12,14 +12,14 @@ const winston = require('winston'),
 
 program
     .version(require('./package.json').version)
-    .option('-k, --keychain-name <name>', 'Keychain Name', process.env.APP_NAME || 'build-tools')
-    .option('--timeout <timeout>', 'Keychain password timeout', parseInt, 3600)
-    .option('--apple-cert <cert>', 'App sigining certificate', process.env.APPLE_CERT)
-    .option('--app-certs <cert>', 'App sigining certificates', list, list(process.env.APP_CERT))
-    .option('--app-keys <key>', 'App sigining keys', list, list(process.env.APP_KEY))
-    .option('--app-key-passwords <pass>', 'App sigining key password or passwords', list, list(process.env.KEY_PASSWORD))
-    .option('--provisioning-profiles <profile>', 'Provisioning profiles', list, list(process.env.PROVISIONING_PROFILE))
-    .option('--codesign <programs>', 'Programs that should be able to use the certificates', list, [
+    .option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools')
+    .option('--timeout <timeout>', 'Keychain password timeout - default 1 hour', parseInt, 3600)
+    .option('--apple-cert <cert>', 'Apple WWDR certificate - default download from apple', process.env.APPLE_CERT)
+    .option('--app-certs <cert>', 'List of app sigining certificates - default APP_CER', list, list(process.env.APP_CERT))
+    .option('--app-keys <key>', 'List app sigining keys - default APP_KEY', list, list(process.env.APP_KEY))
+    .option('--app-key-passwords <pass>', 'App sigining key password or list of passwords - default KEY_PASSWORD', list, list(process.env.KEY_PASSWORD))
+    .option('--provisioning-profiles <profile>', 'Provisioning profiles - default PROVISIONING_PROFILE', list, list(process.env.PROVISIONING_PROFILE))
+    .option('--codesign <programs>', 'Programs that should be able to use the certificates - default codesign, productbuild', list, [
         '/usr/bin/codesign',
         '/usr/bin/productbuild'
     ])

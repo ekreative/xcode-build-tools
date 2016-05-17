@@ -2,15 +2,88 @@
 
 A few scripts for our CI server
 
-## Env vars
+## `add-keys`
+
+    Usage: add-keys [options]
+    
+    Options:
+    
+    -h, --help                         output usage information
+    -V, --version                      output the version number
+    -k, --keychain-name <name>         Keychain Name - default APP_NAME
+    --timeout <timeout>                Keychain password timeout - default 1 hour
+    --apple-cert <cert>                Apple WWDR certificate - default download from apple
+    --app-certs <cert>                 List of app sigining certificates - default APP_CER
+    --app-keys <key>                   List app sigining keys - default APP_KEY
+    --app-key-passwords <pass>         App sigining key password or list of passwords - default KEY_PASSWORD
+    --provisioning-profiles <profile>  Provisioning profiles - default PROVISIONING_PROFILE
+    --codesign <programs>              Programs that should be able to use the certificates - default codesign, productbuild
+    
+## `remove-keys`
+
+    Usage: remove-keys [options]
+    
+    Options:
+    
+    -h, --help                         output usage information
+    -V, --version                      output the version number
+    -k, --keychain-name <name>         Keychain Name - default APP_NAME
+    --provisioning-profiles <profile>  Provisioning profiles - default PROVISIONING_PROFILE
+    
+## `create-ipa`
+    
+    Usage: create-ipa [options]
+    
+    Options:
+    
+    -h, --help                        output usage information
+    -V, --version                     output the version number
+    -k, --keychain-name <name>        Keychain Name - default APP_NAME
+    --developer-name <name>           Developer name to use - CODE_SIGN_IDENTITY
+    --ipa <name>                      Ipa file to create - default build/Release-iphoneos/$APP_NAME.ipa
+    --app <name>                      App file to convert - default build/Release-iphoneos/$APP_NAME.app
+    --provisioning-profile <profile>  Provisioning profile - default PROVISIONING_PROFILE
+
+## `upload-ipa`
+
+    Usage: upload-ipa [options]
+    
+    Options:
+    
+    -h, --help                     output usage information
+    -V, --version                  output the version number
+    -p, --project-id <id>          Project Id - default PROJECT_ID
+    --server <name>                Alternative server address
+    --ipa <name>                   Ipa file to upload - default build/Release-iphoneos/$APP_NAME.ipa
+    --key <key>                    Test build rocks key - default TEST_BUILD_ROCKS_KEY
+    -s, --slack-hook <hook>        Slack Hook - default SLACK_HOOK
+    -c, --slack-channel <channel>  Slack Channel - default SLACK_CHANNEL
+    -m, --message <message>        Test build rocks message
+    
+## `upload-apk`
+
+    Usage: upload-apk [options]
+    
+    Options:
+    
+    -h, --help                     output usage information
+    -V, --version                  output the version number
+    -p, --project-id <id>          Project Id - default PROJECT_ID
+    --apk <name>                   Apk file to upload - default app/build/outputs/apk/app-release.apk
+    --key <key>                    Test build rocks key - defaul tTEST_BUILD_ROCKS_KEY
+    -s, --slack-hook <hook>        Slack Hook - default SLACK_HOOK
+    -c, --slack-channel <channel>  Slack Channel - default SLACK_CHANNEL
+    -m, --message <message>        Test build rocks message
+
+## Summary of env vars
 
 * `$APP_NAME` - Name of the app to build eg "Kidslox"
-* `$PROVISIONING_PROFILE_NAME` - Name of the provisioning profile eg "a2a9039c-05c6-470b-ad13-a19e5a63b6f1"
 * `$PROVISIONING_PROFILE` - Location of provisioning profile
-* `$APPLE_CER` - Location of the apple wwdr cert
 * `$APP_CER` - Location of your signing cert
 * `$APP_KEY` - Location of the matching key
 * `$KEY_PASSWORD` - Password to the signing key
-* `CODE_SIGN_IDENTITY` - Name of the developer eg 'iPhone Distribution: Kidslox Limited'
+* `CODE_SIGN_IDENTITY` - Name of the developer eg 'iPhone Distribution: Developer'
 * `$TEST_BUILD_ROCKS_KEY` - API key for testbuild.rocks to upload
 * `$PROJECT_ID` - Project id for testbuild.rocks
+* `$SLACK_HOOK` - Slack hook to notify of upload
+* `$SLACK_CHANNEL` - Override the hook channel

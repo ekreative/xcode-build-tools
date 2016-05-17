@@ -12,8 +12,8 @@ const winston = require('winston'),
 
 program
     .version(require('./package.json').version)
-    .option('-k, --keychain-name <name>', 'Keychain Name', process.env.APP_NAME || 'build-tools')
-    .option('--provisioning-profiles <profile>', 'Provisioning profiles', list, list(process.env.PROVISIONING_PROFILE))
+    .option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools')
+    .option('--provisioning-profiles <profile>', 'Provisioning profiles - default PROVISIONING_PROFILE', list, list(process.env.PROVISIONING_PROFILE))
     .parse(process.argv);
 
 let commandPromise = exec(`security delete-keychain "${program.keychainName}.keychain" || :`);

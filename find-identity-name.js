@@ -8,7 +8,7 @@ const winston = require('winston'),
 
 program
     .version(require('./package.json').version)
-    .option('-k, --keychain-name <name>', 'Keychain Name', process.env.APP_NAME || 'build-tools')
+    .option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools')
     .parse(process.argv);
 
 find(program.keychainName)
