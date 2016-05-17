@@ -6,6 +6,10 @@ A few scripts for our CI server
 
     Usage: add-keys [options]
     
+    Creates a new Keychain and sets as the default. Imports keys and certificates to it and enables build tool access
+    
+    WARNING: Changes your default keychain
+    
     Options:
     
     -h, --help                         output usage information
@@ -23,6 +27,8 @@ A few scripts for our CI server
 
     Usage: remove-keys [options]
     
+    Delete a keychain and provisioning profiles
+    
     Options:
     
     -h, --help                         output usage information
@@ -33,6 +39,8 @@ A few scripts for our CI server
 ## `create-ipa`
     
     Usage: create-ipa [options]
+    
+    Create an .ipa file from an .app
     
     Options:
     
@@ -47,6 +55,8 @@ A few scripts for our CI server
 ## `upload-ipa`
 
     Usage: upload-ipa [options]
+    
+    Upload ipa file to testbuild.rocks and (optional) send a link to slack
     
     Options:
     
@@ -63,6 +73,8 @@ A few scripts for our CI server
 ## `upload-apk`
 
     Usage: upload-apk [options]
+    
+    Upload apk file to testbuild.rocks and (optional) send a link to slack
     
     Options:
     

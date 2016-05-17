@@ -10,6 +10,7 @@ const winston = require('winston'),
 
 program
     .version(require('./package.json').version)
+    .description('Create an .ipa file from an .app')
     .option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools')
     .option('--developer-name <name>', 'Developer name to use - CODE_SIGN_IDENTITY', process.env.CODE_SIGN_IDENTITY || process.env.DEVELOPER_NAME)
     .option('--ipa <name>', 'Ipa file to create - default build/Release-iphoneos/$APP_NAME.ipa', `${process.cwd()}/build/Release-iphoneos/` + (process.env.APP_NAME ? `${process.env.APP_NAME}.ipa` : 'app.ipa'))

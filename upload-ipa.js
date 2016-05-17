@@ -12,6 +12,7 @@ const fetch = require('node-fetch'),
 
 program
     .version(require('./package.json').version)
+    .description('Upload ipa file to testbuild.rocks and (optional) send a link to slack')
     .option('-p, --project-id <id>', 'Project Id - default PROJECT_ID', process.env.PROJECT_ID)
     .option('--server <name>', 'Alternative server address', 'https://testbuild.rocks')
     .option('--ipa <name>', 'Ipa file to upload - default build/Release-iphoneos/$APP_NAME.ipa', `${process.cwd()}/build/Release-iphoneos/` + (process.env.APP_NAME ? `${process.env.APP_NAME}.ipa` : 'app.ipa'))
