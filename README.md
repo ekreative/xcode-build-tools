@@ -2,6 +2,8 @@
 
 A few scripts for our CI server
 
+Install with `npm install xcode-build-tools`
+
 ## `add-keys`
 
     Usage: add-keys [options]
