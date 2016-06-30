@@ -5,6 +5,7 @@ const winston = require('winston'),
     program = require('commander'),
     del = require('del'),
     path = require('path'),
+    os = require('os'),
 
     exec = require('./lib/exec'),
 
@@ -27,7 +28,7 @@ commandPromise.catch((err) => {
 // Delete the provisioning profiles
 program.provisioningProfiles && program.provisioningProfiles.forEach((profile) => {
     let name = path.basename(profile, path.extname(profile));
-    del(`~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision`, (err) => {
+    del(`${os.homedir()}/Library/MobileDevice/Provisioning Profiles/${name}.mobileprovision`, (err) => {
         if (err) {
             winston.error('Error deleting profiles', err);
             process.exit(1);

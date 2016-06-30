@@ -4,6 +4,7 @@
 const winston = require('winston'),
     program = require('commander'),
     path = require('path'),
+    os = require('os'),
 
     exec = require('./lib/exec'),
     find = require('./lib/find-identity-name');
@@ -21,7 +22,7 @@ program
 let create = (developerName) => {
     let name = path.basename(program.provisioningProfile, path.extname(program.provisioningProfile));
 
-    return exec(`xcrun -log -sdk iphoneos PackageApplication "${program.app}" -o "${program.ipa}" -sign "${developerName}" -embed "~/Library/MobileDevice/Provisioning\ Profiles/${name}.mobileprovision"`);
+    return exec(`xcrun -log -sdk iphoneos PackageApplication "${program.app}" -o "${program.ipa}" -sign "${developerName}" -embed "${os.homedir()}/Library/MobileDevice/Provisioning Profiles/${name}.mobileprovision"`);
 };
 
 let commandPromise;
