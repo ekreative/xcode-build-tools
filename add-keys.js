@@ -5,6 +5,7 @@ const winston = require('winston'),
     program = require('commander'),
     cpr = require('cpr'),
     path = require('path'),
+    os = require('os'),
 
     exec = require('./lib/exec'),
 
@@ -91,7 +92,7 @@ commandPromise.catch((err) => {
 // Put the provisioning profiles in place
 program.provisioningProfiles && program.provisioningProfiles.forEach((profile) => {
     let name = path.basename(profile, path.extname(profile));
-    cpr(profile, `~/Library/MobileDevice/Provisioning Profiles/${name}.mobileprovision`, {
+    cpr(profile, `${os.homedir()}/Library/MobileDevice/Provisioning Profiles/${name}.mobileprovision`, {
         overwrite: true
     }, (err) => {
         if (err) {
