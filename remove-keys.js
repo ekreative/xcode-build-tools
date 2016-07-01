@@ -8,8 +8,7 @@ const winston = require('winston'),
     os = require('os'),
 
     exec = require('./lib/exec'),
-
-    list = (val) => val ? val.split(',') : [];
+    list = require('./lib/list');
 
 program
     .version(require('./package.json').version)
