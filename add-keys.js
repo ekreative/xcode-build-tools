@@ -80,6 +80,11 @@ let commandPromise = exec(commands.shift());
 commands.forEach((command) => {
     commandPromise = commandPromise.then(() => {
         return exec(command);
+    }).catch((err) => {
+        // Ignore errors for existing items
+        if (!/item already exists/.test(err)) {
+            throw err;
+        }
     });
 });
 
