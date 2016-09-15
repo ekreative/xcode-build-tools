@@ -14,7 +14,9 @@ program
     .version(require('./package.json').version)
     .description(`Creates a new Keychain and sets as the default. Imports keys and certificates to it and enables build tool access.
     
-  WARNING: Changes your default keychain.`)
+  WARNING: Changes your default keychain.
+  This can cause problems for Graphic CI environments where git using osxkeychain. This can be solved by disabling this feature
+  git config --system --unset credential.helper`)
     .option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools')
     .option('--timeout <timeout>', 'Keychain password timeout - default 1 hour', parseInt, 3600)
     .option('--apple-cert <cert>', 'Apple WWDR certificate - default download from apple', process.env.APPLE_CERT)
