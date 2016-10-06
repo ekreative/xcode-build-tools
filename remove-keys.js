@@ -7,10 +7,15 @@ var winston = require('winston'),
     del = require('del'),
     path = require('path'),
     os = require('os'),
+
     exec = require('./lib/exec'),
     list = require('./lib/list');
 
-program.version(require('./package.json').version).description('Delete a keychain and provisioning profiles').option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools').option('--provisioning-profiles <profile>', 'Provisioning profiles - default PROVISIONING_PROFILE', list, list(process.env.PROVISIONING_PROFILE)).parse(process.argv);
+program
+    .version(require('./package.json').version).description('Delete a keychain and provisioning profiles')
+    .option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools')
+    .option('--provisioning-profiles <profile>', 'Provisioning profiles - default PROVISIONING_PROFILE', list, list(process.env.PROVISIONING_PROFILE))
+    .parse(process.argv);
 
 var commandPromise = exec('security delete-keychain "' + program.keychainName + '.keychain" || :');
 

@@ -6,10 +6,17 @@ var winston = require('winston'),
     program = require('commander'),
     path = require('path'),
     os = require('os'),
+
     exec = require('./lib/exec'),
     list = require('./lib/list');
 
-program.version(require('./package.json').version).description('Create an .ipa file from an .app').option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools').option('--ipa <name>', 'Ipa file to create - default build/Release-iphoneos/$APP_NAME.ipa', process.cwd() + '/build/Release-iphoneos/' + (process.env.APP_NAME ? process.env.APP_NAME + '.ipa' : 'app.ipa')).option('--app <name>', 'App file to convert - default build/Release-iphoneos/$APP_NAME.app', process.cwd() + '/build/Release-iphoneos/' + (process.env.APP_NAME ? process.env.APP_NAME + '.app' : 'app.app')).option('--provisioning-profile <profile>', 'Provisioning profile - default PROVISIONING_PROFILE', list, list(process.env.PROVISIONING_PROFILE)).parse(process.argv);
+program.version(require('./package.json').version)
+    .description('Create an .ipa file from an .app')
+    .option('-k, --keychain-name <name>', 'Keychain Name - default APP_NAME', process.env.APP_NAME || 'build-tools')
+    .option('--ipa <name>', 'Ipa file to create - default build/Release-iphoneos/$APP_NAME.ipa', process.cwd() + '/build/Release-iphoneos/' + (process.env.APP_NAME ? process.env.APP_NAME + '.ipa' : 'app.ipa'))
+    .option('--app <name>', 'App file to convert - default build/Release-iphoneos/$APP_NAME.app', process.cwd() + '/build/Release-iphoneos/' + (process.env.APP_NAME ? process.env.APP_NAME + '.app' : 'app.app'))
+    .option('--provisioning-profile <profile>', 'Provisioning profile - default PROVISIONING_PROFILE', list, list(process.env.PROVISIONING_PROFILE))
+    .parse(process.argv);
 
 var create = function create() {
     var embed = program.provisioningProfile.length ? ' -embed "' + program.provisioningProfile + '"' : '';
