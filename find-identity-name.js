@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+
 'use strict';
 
-const winston = require('winston'),
+var winston = require('winston'),
     program = require('commander'),
 
     find = require('./lib/find-identity-name');
@@ -12,10 +13,9 @@ program
     .parse(process.argv);
 
 find(program.keychainName)
-    .then((name) => {
+    .then(function (name) {
         process.stdout.write(name);
-    })
-    .catch((err) => {
+    }).catch(function (err) {
         winston.error('Error finding name', err);
         process.exit(1);
     });
