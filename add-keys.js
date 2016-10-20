@@ -2,11 +2,12 @@
 
 'use strict';
 
-var winston = require('winston'),
-    program = require('commander'),
-    cpr = require('cpr'),
-    path = require('path'),
+var cpr = require('cpr'),
+    crypto = require('crypto'),
     os = require('os'),
+    path = require('path'),
+    program = require('commander'),
+    winston = require('winston'),
 
     exec = require('./lib/exec'),
     list = require('./lib/list');
@@ -22,21 +23,24 @@ program
     .option('--app-key-passwords <pass>', 'App sigining key password or list of passwords - default KEY_PASSWORD', list, list(process.env.KEY_PASSWORD))
     .option('--provisioning-profiles <profile>', 'Provisioning profiles - default PROVISIONING_PROFILE', list, list(process.env.PROVISIONING_PROFILE))
     .option('--codesign <programs>', 'Programs that should be able to use the certificates - default codesign, productbuild', list, ['/usr/bin/codesign', '/usr/bin/productbuild'])
+    .option('--password <password>', 'Set the password used for the keychain, otherwise a random password is generated')
     .parse(process.argv);
 
-var commands = [
+var password = program.password || crypto.randomBytes(8).toString('hex'),
+    commands = [
         // delete existing keychain
         'security delete-keychain "' + program.keychainName + '.keychain" || :',
         // Create a custom keychain
-        'security create-keychain -p gitlab "' + program.keychainName + '.keychain"',
+        'security create-keychain -p ' + password + ' "' + program.keychainName + '.keychain"',
         // Add it to the list
         'security list-keychains -s "' + program.keychainName + '.keychain"',
         // Make the custom keychain default, so xcodebuild will use it for signing
         'security default-keychain -s "' + program.keychainName + '.keychain"',
         // Unlock the keychain
-        'security unlock-keychain -p gitlab "' + program.keychainName + '.keychain"',
+        'security unlock-keychain -p ' + password + ' "' + program.keychainName + '.keychain"',
         // Set keychain timeout to 1 hour for long builds
-        'security set-keychain-settings -t ' + program.timeout + ' -l "' + program.keychainName + '.keychain"'],
+        'security set-keychain-settings -t ' + program.timeout + ' -l "' + program.keychainName + '.keychain"'
+    ],
     codesign = program.codesign.map(function (p) {return '-T "' + p + '"';}).join(' ');
 
 // Add the Apple developer root cert
@@ -65,6 +69,9 @@ program.appKeys && program.appKeys.forEach(function (appKey, idx) {
         );
     }
 });
+
+// Since Sierra this is needed to unlock the key for codesign without UI http://stackoverflow.com/a/40039594/859027
+commands.push('security set-key-partition-list -S apple-tool:,apple: -s -k ' + password + ' "' + program.keychainName + '.keychain"');
 
 var commandPromise = exec(commands.shift());
 
