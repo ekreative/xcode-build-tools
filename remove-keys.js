@@ -27,7 +27,7 @@ commandPromise.catch(function (err) {
 // Delete the provisioning profiles
 program.provisioningProfiles && program.provisioningProfiles.forEach(function (profile) {
     var name = path.basename(profile, path.extname(profile));
-    del(os.homedir() + '/Library/MobileDevice/Provisioning Profiles/' + name + '.mobileprovision', function (err) {
+    del(os.homedir() + '/Library/MobileDevice/Provisioning Profiles/' + name + '.mobileprovision', {force: true}, function (err) {
         if (err) {
             winston.error('Error deleting profiles', err);
             process.exit(1);
