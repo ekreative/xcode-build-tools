@@ -19,7 +19,8 @@
     "remove-keys": "./remove-keys.js",
     "upload-ipa": "./upload-ipa.js",
     "upload-apk": "./upload-apk.js",
-    "find-identity-name": "./find-identity-name.js"
+    "find-identity-name": "./find-identity-name.js",
+    "dev-version-xcode": "./dev-version-xcode.js"
   },
   "dependencies": {
     "commander": "^2.9.0",
