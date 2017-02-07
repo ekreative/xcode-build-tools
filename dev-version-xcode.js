@@ -25,7 +25,7 @@ var version = function() {
             }
         })
         .then(function(version) {
-            return exec('agvtool new-version -all "' + version + 'dev$(date +"%Y_%m_%d_%H_%M")"')
+            return exec('agvtool new-version -all "' + version + 'dev$(date +"%Y_%m_%d_%H_%M")$CI_BUILD_REF_NAME"')
         });
 };
 
