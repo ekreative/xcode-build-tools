@@ -21,6 +21,7 @@ program
     .option('-s, --slack-hook <hook>', 'Slack Hook - default SLACK_HOOK', process.env.SLACK_HOOK)
     .option('-c, --slack-channel <channel>', 'Slack Channel - default SLACK_CHANNEL', process.env.SLACK_CHANNEL)
     .option('-m, --message <message>', 'Test build rocks message', child_process.execSync('git log --format=%B -n 1 || echo "No comment"'))
+    .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_BUILD_REF_NAME)
     .parse(process.argv);
 
 winston.info('Uploading build');
@@ -29,6 +30,7 @@ var data = new FormData();
 data.append('app', fs.createReadStream(program.ipa));
 data.append('comment', program.message);
 data.append('ci', 'true');
+data.append('ref', program.ref);
 
 data.getLengthSync = null; //Work around until https://github.com/bitinn/node-fetch/issues/102
 
