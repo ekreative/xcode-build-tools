@@ -86,14 +86,19 @@ commands.forEach(function (command) {
     });
 });
 
-commandPromise.catch(function (err) {
+commandPromise = commandPromise.catch(function (err) {
     winston.error('Error setting up keychain', err);
     process.exit(1);
+});
+
+commandPromise.then(function () {
+    winston.info('Created keychain');
 });
 
 // Put the provisioning profiles in place
 program.provisioningProfiles && program.provisioningProfiles.forEach(function (profile) {
     var name = path.basename(profile, path.extname(profile));
+    winston.info('Installing ' + profile);
     cpr(profile, os.homedir() + '/Library/MobileDevice/Provisioning Profiles/' + name + '.mobileprovision', {
         overwrite: true
     }, function (err) {
