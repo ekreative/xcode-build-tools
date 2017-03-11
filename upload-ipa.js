@@ -45,6 +45,9 @@ var result = fetch(program.server + '/api/builds/upload/' + program.projectId + 
         if (res.status == 200) {
             return res;
         }
+        if (res.status == 302) {
+            throw new Error('Failed to upload build to testbuild.rocks: variable TEST_BUILD_ROCKS_KEY is not specified');
+        }
         return res.text().then(function (body) {
             throw new Error('Failed to upload build to testbuild.rocks [' + body + ']');
         });
