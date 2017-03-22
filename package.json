@@ -20,7 +20,8 @@
     "upload-ipa": "./upload-ipa.js",
     "upload-apk": "./upload-apk.js",
     "find-identity-name": "./find-identity-name.js",
-    "dev-version-xcode": "./dev-version-xcode.js"
+    "dev-version-xcode": "./dev-version-xcode.js",
+    "create-release": "./create-release.js"
   },
   "dependencies": {
     "commander": "^2.9.0",
