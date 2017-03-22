@@ -36,7 +36,7 @@ var result = fetch(program.server + '/api/v3/projects/' + program.projectId + '/
     }
 })
     .then(function (res) {
-        if (res.status == 200) {
+        if (res.status >= 200 && res.status < 300) {
             return res;
         }
         return res.text().then(function (body) {
