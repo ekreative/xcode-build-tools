@@ -20,9 +20,13 @@ program
     .option('--key <key>', 'Test build rocks key - default TEST_BUILD_ROCKS_KEY', process.env.TEST_BUILD_ROCKS_KEY)
     .option('-s, --slack-hook <hook>', 'Slack Hook - default SLACK_HOOK', process.env.SLACK_HOOK)
     .option('-c, --slack-channel <channel>', 'Slack Channel - default SLACK_CHANNEL', process.env.SLACK_CHANNEL)
-    .option('-m, --message <message>', 'Test build rocks message', child_process.execSync('git log --format=%B -n 1 || echo "No comment"'))
+    .option('-m, --message <message>', 'Test build rocks message', 'auto')
     .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_BUILD_REF_NAME)
     .parse(process.argv);
+
+if (program.message == 'auto') {
+    program.message = child_process.execSync('git log --format=%B -n 1 || echo "No comment"');
+}
 
 winston.info('Uploading build');
 

@@ -14,10 +14,18 @@ program
     .option('--server <server>', 'GitLab server', process.env.GITLAB_API || 'https://git.ekreative.com')
     .option('--token <token>', 'Api key', process.env.GITLAB_API_TOKEN)
     .option('--project-id <id>', 'Project Id', process.env.CI_PROJECT_ID)
-    .option('--tag-name <tag>', 'Tag name', 'v' + ('' + child_process.execSync('agvtool what-marketing-version -terse1')).trim() + '-' + (process.env.CI_BUILD_ID || process.env.CI_JOB_ID || '1'))
+    .option('--tag-name <tag>', 'Tag name', 'auto')
     .option('--ref <ref>', 'Git ref', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF)
-    .option('-n, --notes <notes>', 'Release notes', ('' + child_process.execSync('git log --format=%B -n 1 || echo "No comment"')).trim())
+    .option('-n, --notes <notes>', 'Release notes', 'auto')
     .parse(process.argv);
+
+if (program.tagName == 'auto') {
+    program.tagName = 'v' + ('' + child_process.execSync('agvtool what-marketing-version -terse1')).trim() + '-' + (process.env.CI_BUILD_ID || process.env.CI_JOB_ID || '1');
+}
+
+if (program.notes == 'auto') {
+    program.notes = ('' + child_process.execSync('git log --format=%B -n 1 || echo "No comment"')).trim();
+}
 
 winston.info('Creating release');
 
