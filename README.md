@@ -2,6 +2,10 @@
 
 A few scripts for our CI server
 
+[![Version](https://img.shields.io/npm/v/xcode-build-tools.svg)](https://www.npmjs.com/package/xcode-build-tools)
+[![License](https://img.shields.io/npm/l/xcode-build-tools.svg)](https://www.npmjs.com/package/xcode-build-tools)
+[![Build Status](https://travis-ci.org/ekreative/xcode-build-tools.svg?branch=master)](https://travis-ci.org/ekreative/xcode-build-tools)
+
 Install with `npm install xcode-build-tools`
 
 ## `add-keys`
