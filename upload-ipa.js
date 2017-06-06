@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-'use strict';
+'use strict'
 
-var fetch = require('node-fetch'),
-    FormData = require('form-data'),
-    fs = require('fs'),
-    child_process = require('child_process'),
-    winston = require('winston'),
-    program = require('commander'),
+var fetch = require('node-fetch')
+var FormData = require('form-data')
+var fs = require('fs')
+var winston = require('winston')
+var program = require('commander')
 
-    slack = require('./lib/slack');
+var commit = require('./lib/commit')
+var slack = require('./lib/slack')
 
 program
     .version(require('./package.json').version)
@@ -22,41 +22,41 @@ program
     .option('-c, --slack-channel <channel>', 'Slack Channel - default SLACK_CHANNEL', process.env.SLACK_CHANNEL)
     .option('-m, --message <message>', 'Test build rocks message', 'auto')
     .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_BUILD_REF_NAME)
-    .parse(process.argv);
+    .parse(process.argv)
 
-if (program.message == 'auto') {
-    program.message = child_process.execSync('git log --format=%B -n 1 || echo "No comment"');
+if (program.message === 'auto') {
+  program.message = commit()
 }
 
-winston.info('Uploading build');
+winston.info('Uploading build')
 
-var data = new FormData();
-data.append('app', fs.createReadStream(program.ipa));
-data.append('comment', program.message);
-data.append('ci', 'true');
-data.append('ref', program.ref);
+var data = new FormData()
+data.append('app', fs.createReadStream(program.ipa))
+data.append('comment', program.message)
+data.append('ci', 'true')
+data.append('ref', program.ref)
 
-data.getLengthSync = null; //Work around until https://github.com/bitinn/node-fetch/issues/102
+data.getLengthSync = null // Work around until https://github.com/bitinn/node-fetch/issues/102
 
 var result = fetch(program.server + '/api/builds/upload/' + program.projectId + '/ios', {
-    method: 'POST',
-    body: data,
-    headers: {
-        'X-API-Key': program.key
-    }
+  method: 'POST',
+  body: data,
+  headers: {
+    'X-API-Key': program.key
+  }
 })
     .then(function (res) {
-        if (res.status == 200) {
-            return res;
-        }
-        return res.text().then(function (body) {
-            throw new Error('Failed to upload build to testbuild.rocks [' + body + ']');
-        });
-    });
+      if (res.status === 200) {
+        return res
+      }
+      return res.text().then(function (body) {
+        throw new Error('Failed to upload build to testbuild.rocks [' + body + ']')
+      })
+    })
 if (program.slackHook) {
-    result = result.then(slack(program.slackHook, program.slackChannel));
+  result = result.then(slack(program.slackHook, program.slackChannel))
 }
 result.catch(function (err) {
-    winston.error('Error uploading ipa', err);
-    process.exit(1);
-});
+  winston.error('Error uploading ipa', err)
+  process.exit(1)
+})

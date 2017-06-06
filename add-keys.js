@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
-'use strict';
+'use strict'
 
-var cpr = require('cpr'),
-    crypto = require('crypto'),
-    os = require('os'),
-    path = require('path'),
-    program = require('commander'),
-    winston = require('winston'),
+var cpr = require('cpr')
+var crypto = require('crypto')
+var os = require('os')
+var path = require('path')
+var program = require('commander')
+var winston = require('winston')
 
-    exec = require('./lib/exec'),
-    list = require('./lib/list');
+var exec = require('./lib/exec')
+var list = require('./lib/list')
 
 program
     .version(require('./package.json').version)
@@ -24,87 +24,87 @@ program
     .option('--provisioning-profiles <profile>', 'Provisioning profiles - default PROVISIONING_PROFILE', list, list(process.env.PROVISIONING_PROFILE))
     .option('--codesign <programs>', 'Programs that should be able to use the certificates - default codesign, productbuild', list, ['/usr/bin/codesign', '/usr/bin/productbuild'])
     .option('--password <password>', 'Set the password used for the keychain, otherwise a random password is generated')
-    .parse(process.argv);
+    .parse(process.argv)
 
-var password = program.password || crypto.randomBytes(8).toString('hex'),
-    commands = [
-        // delete existing keychain
-        'security delete-keychain "' + program.keychainName + '.keychain" || :',
-        // Create a custom keychain
-        'security create-keychain -p ' + password + ' "' + program.keychainName + '.keychain"',
-        // Add it to the list
-        'security list-keychains -s "' + program.keychainName + '.keychain"',
-        // Make the custom keychain default, so xcodebuild will use it for signing
-        'security default-keychain -s "' + program.keychainName + '.keychain"',
-        // Unlock the keychain
-        'security unlock-keychain -p ' + password + ' "' + program.keychainName + '.keychain"',
-        // Set keychain timeout to 1 hour for long builds
-        'security set-keychain-settings -t ' + program.timeout + ' -l "' + program.keychainName + '.keychain"'
-    ],
-    codesign = program.codesign.map(function (p) {return '-T "' + p + '"';}).join(' ');
+var password = program.password || crypto.randomBytes(8).toString('hex')
+var commands = [
+  // delete existing keychain
+  'security delete-keychain "' + program.keychainName + '.keychain" || :',
+  // Create a custom keychain
+  'security create-keychain -p ' + password + ' "' + program.keychainName + '.keychain"',
+  // Add it to the list
+  'security list-keychains -s "' + program.keychainName + '.keychain"',
+  // Make the custom keychain default, so xcodebuild will use it for signing
+  'security default-keychain -s "' + program.keychainName + '.keychain"',
+  // Unlock the keychain
+  'security unlock-keychain -p ' + password + ' "' + program.keychainName + '.keychain"',
+  // Set keychain timeout to 1 hour for long builds
+  'security set-keychain-settings -t ' + program.timeout + ' -l "' + program.keychainName + '.keychain"'
+]
+var codesign = program.codesign.map(function (p) { return '-T "' + p + '"' }).join(' ')
 
 // Add the Apple developer root cert
 if (program.appleCert) {
-    commands.push('security import "' + program.appleCert + '" -k "' + program.keychainName + '.keychain" ' + codesign);
+  commands.push('security import "' + program.appleCert + '" -k "' + program.keychainName + '.keychain" ' + codesign)
 } else {
-    commands.push(
+  commands.push(
         'curl "https://developer.apple.com/certificationauthority/AppleWWDRCA.cer" > apple.cer', 'security import apple.cer -k "' + program.keychainName + '.keychain" ' + codesign, 'rm apple.cer'
-    );
+    )
 }
 
 // Add certificates to keychain and allow codesign to access them
 program.appCerts && program.appCerts.forEach(function (appCert) {
-    commands.push('security import "' + appCert + '" -k "' + program.keychainName + '.keychain" ' + codesign);
-});
+  commands.push('security import "' + appCert + '" -k "' + program.keychainName + '.keychain" ' + codesign)
+})
 
 program.appKeys && program.appKeys.forEach(function (appKey, idx) {
-    var password = program.appKeyPasswords[idx] || program.appKeyPasswords[0];
-    if (password) {
-        commands.push(
+  var password = program.appKeyPasswords[idx] || program.appKeyPasswords[0]
+  if (password) {
+    commands.push(
             'security import "' + appKey + '" -k "' + program.keychainName + '.keychain" -P "' + password + '" ' + codesign
-        );
-    } else {
-        commands.push(
+        )
+  } else {
+    commands.push(
             'security import "' + appKey + '" -k "' + program.keychainName + '.keychain" ' + codesign
-        );
-    }
-});
+        )
+  }
+})
 
 // Since Sierra this is needed to unlock the key for codesign without UI http://stackoverflow.com/a/40039594/859027
-commands.push('security set-key-partition-list -S apple-tool:,apple: -s -k ' + password + ' "' + program.keychainName + '.keychain"');
+commands.push('security set-key-partition-list -S apple-tool:,apple: -s -k ' + password + ' "' + program.keychainName + '.keychain"')
 
-var commandPromise = exec(commands.shift());
+var commandPromise = exec(commands.shift())
 
 commands.forEach(function (command) {
-    commandPromise = commandPromise.then(function () {
-        return exec(command);
-    }).catch(function (err) {
+  commandPromise = commandPromise.then(function () {
+    return exec(command)
+  }).catch(function (err) {
         // Ignore errors for existing items
-        if (!/item already exists/.test(err)) {
-            throw err;
-        }
-    });
-});
+    if (!/item already exists/.test(err)) {
+      throw err
+    }
+  })
+})
 
 commandPromise = commandPromise.catch(function (err) {
-    winston.error('Error setting up keychain', err);
-    process.exit(1);
-});
+  winston.error('Error setting up keychain', err)
+  process.exit(1)
+})
 
 commandPromise.then(function () {
-    winston.info('Created keychain');
-});
+  winston.info('Created keychain')
+})
 
 // Put the provisioning profiles in place
 program.provisioningProfiles && program.provisioningProfiles.forEach(function (profile) {
-    var name = path.basename(profile, path.extname(profile));
-    winston.info('Installing ' + profile);
-    cpr(profile, os.homedir() + '/Library/MobileDevice/Provisioning Profiles/' + name + '.mobileprovision', {
-        overwrite: true
-    }, function (err) {
-        if (err) {
-            winston.error('Error copying profiles', err);
-            process.exit(1);
-        }
-    });
-});
+  var name = path.basename(profile, path.extname(profile))
+  winston.info('Installing ' + profile)
+  cpr(profile, os.homedir() + '/Library/MobileDevice/Provisioning Profiles/' + name + '.mobileprovision', {
+    overwrite: true
+  }, function (err) {
+    if (err) {
+      winston.error('Error copying profiles', err)
+      process.exit(1)
+    }
+  })
+})
