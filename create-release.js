@@ -19,8 +19,15 @@ program
     .option('-n, --notes <notes>', 'Release notes', 'auto')
     .parse(process.argv);
 
+var buildNumber = (process.env.CI_BUILD_ID || process.env.CI_JOB_ID || '1');
+
 if (program.tagName == 'auto') {
-    program.tagName = 'v' + ('' + child_process.execSync('agvtool what-marketing-version -terse1')).trim() + '-' + (process.env.CI_BUILD_ID || process.env.CI_JOB_ID || '1');
+  try {
+    program.tagName = 'v' + iosVersion() + '-' + buildNumber;
+  } catch (e) {
+    var date = new Date();
+    program.tagName = [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()].map(leadingZero).join('-') + '.' + buildNumber;
+  }
 }
 
 if (program.notes == 'auto') {
@@ -56,3 +63,15 @@ result.catch(function (err) {
     winston.error('Error creating release', err);
     process.exit(1);
 });
+
+function leadingZero(val) {
+  var str = '' + val;
+  if (str.length == 1) {
+    return '0' + str;
+  }
+  return str;
+}
+
+function iosVersion() {
+  return ('' + child_process.execSync('agvtool what-marketing-version -terse1')).trim();
+}
