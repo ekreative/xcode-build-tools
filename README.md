@@ -89,15 +89,32 @@ Install with `npm install xcode-build-tools`
     -c, --slack-channel <channel>  Slack Channel - default SLACK_CHANNEL
     -m, --message <message>        Test build rocks message
 
+## `create-release`
+
+    Usage: create-release [options]
+    
+    Create a new release on GitLab
+    
+    Options:
+    
+    -h, --help           output usage information
+    -V, --version        output the version number
+    --server <server>    GitLab server
+    --token <token>      Api key
+    --project-id <id>    Project Id
+    --tag-name <tag>     Tag name
+    --ref <ref>          Git ref
+    -n, --notes <notes>  Release notes
+
 ## Summary of env vars
 
-* `$APP_NAME` - Name of the app to build eg "Kidslox"
-* `$PROVISIONING_PROFILE` - Location of provisioning profile
-* `$APP_CER` - Location of your signing cert
-* `$APP_KEY` - Location of the matching key
-* `$KEY_PASSWORD` - Password to the signing key
+* `APP_NAME` - Name of the app to build eg "Kidslox"
+* `PROVISIONING_PROFILE` - Location of provisioning profile
+* `APP_CER` - Location of your signing cert
+* `APP_KEY` - Location of the matching key
+* `KEY_PASSWORD` - Password to the signing key
 * `CODE_SIGN_IDENTITY` - Name of the developer eg 'iPhone Distribution: Developer'
-* `$TEST_BUILD_ROCKS_KEY` - API key for testbuild.rocks to upload
-* `$PROJECT_ID` - Project id for testbuild.rocks
-* `$SLACK_HOOK` - Slack hook to notify of upload
-* `$SLACK_CHANNEL` - Override the hook channel
+* `TEST_BUILD_ROCKS_KEY` - API key for testbuild.rocks to upload
+* `PROJECT_ID` - Project id for testbuild.rocks
+* `SLACK_HOOK` - Slack hook to notify of upload
+* `SLACK_CHANNEL` - Override the hook channel
