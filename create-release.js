@@ -37,15 +37,15 @@ if (program.notes === 'auto') {
 }
 
 if (!program.token) {
-  throw new Error('Missing GitLab token');
+  throw new Error('Missing GitLab token')
 }
 
 if (!program.server) {
-  throw new Error('Missing GitLab server');
+  throw new Error('Missing GitLab server')
 }
 
 if (!program.projectId) {
-  throw new Error('Missing GitLab Project Id');
+  throw new Error('Missing GitLab Project Id')
 }
 
 winston.info('Creating release')
