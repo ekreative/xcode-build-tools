@@ -36,6 +36,18 @@ if (program.notes === 'auto') {
   program.notes = commit()
 }
 
+if (!program.token) {
+  throw new Error('Missing GitLab token');
+}
+
+if (!program.server) {
+  throw new Error('Missing GitLab server');
+}
+
+if (!program.projectId) {
+  throw new Error('Missing GitLab Project Id');
+}
+
 winston.info('Creating release')
 
 var data = new FormData()
