@@ -44,14 +44,21 @@ var result = fetch('https://testbuild.rocks/api/builds/upload/' + program.projec
     'X-API-Key': program.key
   }
 })
-    .then(function (res) {
-      if (res.status === 200) {
-        return res
-      }
-      return res.text().then(function (body) {
-        throw new Error('Failed to upload build to testbuild.rocks [' + body + ']')
-      })
+  .then(function (res) {
+    if (res.status === 200) {
+      return res
+    }
+    return res.text().then(function (body) {
+      throw new Error('Failed to upload build to testbuild.rocks [' + body + ']')
     })
+  })
+  .then(function (res) { return res.json() })
+  .then(function (json) {
+    if (json.install) {
+      winston.info('Build available at ' + json.install)
+    }
+    return json
+  })
 if (program.slackHook) {
   result = result.then(slack(program.slackHook, program.slackChannel))
 }

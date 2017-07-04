@@ -72,6 +72,9 @@ var result = fetch(program.server + '/api/v3/projects/' + program.projectId + '/
         throw new Error('Failed to create release [' + body + ']')
       })
     })
+result = result.then(function () {
+  winston.info('Created release ' + program.tagName)
+})
 
 result.catch(function (err) {
   winston.error('Error creating release', err)
