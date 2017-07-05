@@ -21,7 +21,7 @@ program
     .option('-n, --notes <notes>', 'Release notes', 'auto')
     .parse(process.argv)
 
-var buildNumber = (process.env.CI_BUILD_ID || process.env.CI_JOB_ID || '1')
+var buildNumber = (process.env.CI_JOB_ID || process.env.CI_BUILD_ID || '1')
 
 if (program.tagName === 'auto') {
   try {

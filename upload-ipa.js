@@ -21,7 +21,8 @@ program
     .option('-s, --slack-hook <hook>', 'Slack Hook - default SLACK_HOOK', process.env.SLACK_HOOK)
     .option('-c, --slack-channel <channel>', 'Slack Channel - default SLACK_CHANNEL', process.env.SLACK_CHANNEL)
     .option('-m, --message <message>', 'Test build rocks message', 'auto')
-    .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_BUILD_REF_NAME)
+    .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_COMMIT_REF_SLUG || process.env.CI_BUILD_REF_SLUG)
+    .option('-c, --commit <commit>', 'Test build rocks git commit', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF)
     .parse(process.argv)
 
 if (program.message === 'auto') {
@@ -35,6 +36,7 @@ data.append('app', fs.createReadStream(program.ipa))
 data.append('comment', program.message)
 data.append('ci', 'true')
 data.append('ref', program.ref)
+data.append('commit', program.commit)
 
 data.getLengthSync = null // Work around until https://github.com/bitinn/node-fetch/issues/102
 
