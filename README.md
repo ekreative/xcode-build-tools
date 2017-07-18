@@ -72,7 +72,7 @@ Install with `npm install xcode-build-tools`
     --server <name>                Alternative server address
     --ipa <name>                   Ipa file to upload - default build/Release-iphoneos/$APP_NAME.ipa
     --key <key>                    Test build rocks key - default TEST_BUILD_ROCKS_KEY
-    -s, --slack-hook <hook>        Slack Hook - default SLACK_HOOK
+    -s, --slack-hook <hook>        Slack Hook - default SLACK_URL
     -c, --slack-channel <channel>  Slack Channel - default SLACK_CHANNEL
     -m, --message <message>        Test build rocks message
     
@@ -89,7 +89,7 @@ Install with `npm install xcode-build-tools`
     -p, --project-id <id>          Project Id - default PROJECT_ID
     --apk <name>                   Apk file to upload - default app/build/outputs/apk/app-release.apk
     --key <key>                    Test build rocks key - defaul tTEST_BUILD_ROCKS_KEY
-    -s, --slack-hook <hook>        Slack Hook - default SLACK_HOOK
+    -s, --slack-hook <hook>        Slack Hook - default SLACK_URL
     -c, --slack-channel <channel>  Slack Channel - default SLACK_CHANNEL
     -m, --message <message>        Test build rocks message
 
@@ -120,5 +120,5 @@ Install with `npm install xcode-build-tools`
 * `CODE_SIGN_IDENTITY` - Name of the developer eg 'iPhone Distribution: Developer'
 * `TEST_BUILD_ROCKS_KEY` - API key for testbuild.rocks to upload
 * `PROJECT_ID` - Project id for testbuild.rocks
-* `SLACK_HOOK` - Slack hook to notify of upload
+* `SLACK_URL` - Slack hook to notify of upload (or `SLACK_HOOK`)
 * `SLACK_CHANNEL` - Override the hook channel
