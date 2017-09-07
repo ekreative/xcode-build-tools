@@ -18,17 +18,27 @@ program
     .option('--project-id <id>', 'Project Id', process.env.CI_PROJECT_ID)
     .option('--tag-name <tag>', 'Tag name', 'auto')
     .option('--ref <ref>', 'Git ref', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF)
+    .option('--apk <name>', 'Apk file to find version - default app/build/outputs/apk/app-release.apk', (process.env.PROJECT_FOLDER || process.cwd()) + '/app/build/outputs/apk/app-release.apk')
+    .option('--appVersion <appVersion>', 'Set the version to tag, will have build number added')
     .option('-n, --notes <notes>', 'Release notes', 'auto')
     .parse(process.argv)
 
 var buildNumber = (process.env.CI_JOB_ID || process.env.CI_BUILD_ID || '1')
 
 if (program.tagName === 'auto') {
-  try {
-    program.tagName = 'v' + iosVersion() + '-' + buildNumber
-  } catch (e) {
-    var date = new Date()
-    program.tagName = [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()].map(leadingZero).join('-') + '.' + buildNumber
+  if (program.appVersion) {
+    program.tagName = 'v' + program.version + '-' + buildNumber
+  } else {
+    try {
+      program.tagName = 'v' + iosVersion() + '-' + buildNumber
+    } catch (e) {
+      try {
+        program.tagName = 'v' + androidVersion(program.apk) + '-' + buildNumber
+      } catch (e) {
+        var date = new Date()
+        program.tagName = [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()].map(leadingZero).join('-') + '.' + buildNumber
+      }
+    }
   }
 }
 
@@ -91,4 +101,16 @@ function leadingZero (val) {
 
 function iosVersion () {
   return ('' + execSync('agvtool what-marketing-version -terse1')).trim()
+}
+
+function androidVersion (apk) {
+  var v = ('' + execSync('aapt dump badging "' + apk + '" | grep versionName')).trim()
+  if (!v) {
+    throw new Error('Failed to find appVersion')
+  }
+  var matches = v.match(/versionName='(.+?)'/)
+  if (!matches || !matches[1]) {
+    throw new Error('Invalid version from aapt ' + v)
+  }
+  return matches[1]
 }
