@@ -113,12 +113,33 @@ Install with `npm install xcode-build-tools`
 ## Summary of env vars
 
 * `APP_NAME` - Name of the app to build eg "Kidslox"
+
+To install keys
+
 * `PROVISIONING_PROFILE` - Location of provisioning profile
 * `APP_CER` - Location of your signing cert
 * `APP_KEY` - Location of the matching key
 * `KEY_PASSWORD` - Password to the signing key
 * `CODE_SIGN_IDENTITY` - Name of the developer eg 'iPhone Distribution: Developer'
+
+Upload builds
+
 * `TEST_BUILD_ROCKS_KEY` - API key for testbuild.rocks to upload
 * `PROJECT_ID` - Project id for testbuild.rocks
+
+Get slack notifications
+
 * `SLACK_URL` - Slack hook to notify of upload (or `SLACK_HOOK`)
 * `SLACK_CHANNEL` - Override the hook channel
+
+Create  release
+
+* `GITLAB_API_TOKEN` - Token that gives access to the GitLab API to create a new release
+
+GitLab CI Variables used
+
+* `CI_PROJECT_ID` - GitLab project id
+* `CI_PROJECT_URL` - GitLab project url
+* `CI_COMMIT_SHA` - Current git commit
+* `CI_JOB_ID` - Current job number
+* `CI_COMMIT_REF_SLUG` - Current branch name (url friendly)

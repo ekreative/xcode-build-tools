@@ -15,6 +15,7 @@ program
     .version(require('./package.json').version)
     .description('Upload apk file to testbuild.rocks and (optional) send a link to slack')
     .option('-p, --project-id <id>', 'Project Id - default PROJECT_ID', parseInt, process.env.PROJECT_ID)
+    .option('--project-url <url>', 'GitLab project url', process.env.CI_PROJECT_URL)
     .option('--apk <name>', 'Apk file to upload - default app/build/outputs/apk/app-release.apk', (process.env.PROJECT_FOLDER || process.cwd()) + '/app/build/outputs/apk/app-release.apk')
     .option('--key <key>', 'Test build rocks key - default TEST_BUILD_ROCKS_KEY', process.env.TEST_BUILD_ROCKS_KEY)
     .option('-s, --slack-hook <hook>', 'Slack Hook - default SLACK_URL', process.env.SLACK_URL || process.env.SLACK_HOOK)
@@ -62,7 +63,7 @@ var result = fetch('https://testbuild.rocks/api/builds/upload/' + program.projec
     return json
   })
 if (program.slackHook) {
-  result = result.then(slack(program.slackHook, program.slackChannel))
+  result = result.then(slack(program.slackHook, program.slackChannel, program.projectUrl))
 }
 result.catch(function (err) {
   winston.error('Error uploading apk', err)

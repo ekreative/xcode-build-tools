@@ -15,6 +15,7 @@ program
     .version(require('./package.json').version)
     .description('Upload ipa file to testbuild.rocks and (optional) send a link to slack')
     .option('-p, --project-id <id>', 'Project Id - default PROJECT_ID', process.env.PROJECT_ID)
+    .option('--project-url <url>', 'GitLab project url', process.env.CI_PROJECT_URL)
     .option('--server <name>', 'Alternative server address', 'https://testbuild.rocks')
     .option('--ipa <name>', 'Ipa file to upload - default build/Release-iphoneos/$APP_NAME.ipa', process.cwd() + '/build/Release-iphoneos/' + (process.env.APP_NAME ? process.env.APP_NAME + '.ipa' : 'app.ipa'))
     .option('--key <key>', 'Test build rocks key - default TEST_BUILD_ROCKS_KEY', process.env.TEST_BUILD_ROCKS_KEY)
@@ -63,7 +64,7 @@ var result = fetch(program.server + '/api/builds/upload/' + program.projectId + 
     return json
   })
 if (program.slackHook) {
-  result = result.then(slack(program.slackHook, program.slackChannel))
+  result = result.then(slack(program.slackHook, program.slackChannel, program.projectUrl))
 }
 result.catch(function (err) {
   winston.error('Error uploading ipa', err)
