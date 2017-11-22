@@ -68,10 +68,10 @@ program.appKeys && program.appKeys.forEach(function (appKey, idx) {
             'security import "' + appKey + '" -k "' + program.keychainName + '.keychain" ' + codesign
         )
   }
-})
 
-// Since Sierra this is needed to unlock the key for codesign without UI http://stackoverflow.com/a/40039594/859027
-commands.push('security set-key-partition-list -S apple-tool:,apple: -s -k ' + password + ' "' + program.keychainName + '.keychain"')
+  // Since Sierra this is needed to unlock the key for codesign without UI http://stackoverflow.com/a/40039594/859027
+  commands.push('security set-key-partition-list -S apple-tool:,apple: -s -k ' + password + ' "' + program.keychainName + '.keychain"')
+})
 
 var commandPromise = exec(commands.shift())
 
