@@ -16,16 +16,11 @@ exec('security list-keychains -d user').then(function (process) {
   if (/keychain/.test(process.stdout)) {
     winston.info('Keychain exists')
   } else {
-    return exec('security create-keychain -p "" login.keychain').then(function (process) {
+    return exec('security create-keychain -p "" login.keychain || :').then(function (process) {
       winston.info('Created keychain')
-    }).catch(function (err) {
-      if (err === 48) {
-        winston.info('Restored keychain')
-      } else {
-        throw err
-      }
-    }).then(function () {
       return exec('security default-keychain -s login.keychain');
+    }).then(function () {
+      winston.info('Set default')
     })
   }
 })
