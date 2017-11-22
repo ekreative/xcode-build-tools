@@ -24,6 +24,8 @@ exec('security list-keychains -d user').then(function (process) {
       } else {
         throw err
       }
+    }).then(function () {
+      return exec('security default-keychain -s login.keychain');
     })
   }
 })
