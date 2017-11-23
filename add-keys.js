@@ -31,13 +31,13 @@ var commands = [
   // delete existing keychain
   'security delete-keychain "' + program.keychainName + '.keychain" || :',
   // Create a custom keychain
-  'security create-keychain -p ' + password + ' "' + program.keychainName + '.keychain"',
+  'security create-keychain -p "' + password + '" "' + program.keychainName + '.keychain"',
   // Add it to the list
   'security list-keychains -s "' + program.keychainName + '.keychain"',
   // Make the custom keychain default, so xcodebuild will use it for signing
   'security default-keychain -s "' + program.keychainName + '.keychain"',
   // Unlock the keychain
-  'security unlock-keychain -p ' + password + ' "' + program.keychainName + '.keychain"',
+  'security unlock-keychain -p "' + password + '" "' + program.keychainName + '.keychain"',
   // Set keychain timeout to 1 hour for long builds
   'security set-keychain-settings -t ' + program.timeout + ' -l "' + program.keychainName + '.keychain"'
 ]
@@ -58,19 +58,11 @@ program.appCerts && program.appCerts.forEach(function (appCert) {
 })
 
 program.appKeys && program.appKeys.forEach(function (appKey, idx) {
-  var password = program.appKeyPasswords[idx] || program.appKeyPasswords[0]
-  if (password) {
-    commands.push(
-            'security import "' + appKey + '" -k "' + program.keychainName + '.keychain" -P "' + password + '" ' + codesign
-        )
-  } else {
-    commands.push(
-            'security import "' + appKey + '" -k "' + program.keychainName + '.keychain" ' + codesign
-        )
-  }
+  var keyPassword = program.appKeyPasswords[idx] || program.appKeyPasswords[0] || ""
+  commands.push('security import "' + appKey + '" -k "' + program.keychainName + '.keychain" -P "' + keyPassword + '" ' + codesign)
 
   // Since Sierra this is needed to unlock the key for codesign without UI http://stackoverflow.com/a/40039594/859027
-  commands.push('security set-key-partition-list -S apple-tool:,apple: -s -k ' + password + ' "' + program.keychainName + '.keychain"')
+  commands.push('security set-key-partition-list -S apple-tool:,apple: -s -k "' + password + '" "' + program.keychainName + '.keychain"')
 })
 
 var commandPromise = exec(commands.shift())
