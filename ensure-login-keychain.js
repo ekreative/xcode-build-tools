@@ -13,9 +13,18 @@ program
   .parse(process.argv)
 
 exec('security list-keychains -d user').then(function (process) {
-  if (/keychain/.test(process.stdout)) {
-    winston.info('Keychain exists')
-  } else {
+  var exists = false;
+  process.stdout.split('\n').forEach(function(keychain) {
+    if (/login\.keychain-db/.test(keychain)) {
+      winston.info('Keychain exists')
+      exists = true;
+      return;
+    }
+
+    exec('security delete-keychain ' + keychain.trim());
+  });
+
+  if (!exists) {
     return exec('security create-keychain -p "" login.keychain || :').then(function (process) {
       winston.info('Created keychain')
       return exec('security default-keychain -s login.keychain');
