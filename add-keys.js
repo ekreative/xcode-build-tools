@@ -58,7 +58,7 @@ program.appCerts && program.appCerts.forEach(function (appCert) {
 })
 
 program.appKeys && program.appKeys.forEach(function (appKey, idx) {
-  var keyPassword = program.appKeyPasswords[idx] || program.appKeyPasswords[0] || ""
+  var keyPassword = program.appKeyPasswords[idx] || program.appKeyPasswords[0] || ''
   commands.push('security import "' + appKey + '" -k "' + program.keychainName + '.keychain" -P "' + keyPassword + '" ' + codesign)
 
   // Since Sierra this is needed to unlock the key for codesign without UI http://stackoverflow.com/a/40039594/859027
