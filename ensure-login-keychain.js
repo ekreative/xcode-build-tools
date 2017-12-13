@@ -25,7 +25,7 @@ exec('security list-keychains -d user').then(function (process) {
 
       exec('security delete-keychain ' + keychain)
         .catch(function (err) {
-          winston.warning('Failed to delete keychain', keychain, err)
+          winston.error('Failed to delete keychain', keychain, err)
         })
     }
   })
