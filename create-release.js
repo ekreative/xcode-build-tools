@@ -8,7 +8,7 @@ var FormData = require('form-data')
 var program = require('commander')
 var winston = require('winston')
 
-var commit = require('./lib/commit')
+var git = require('./lib/git')
 
 program
     .version(require('./package.json').version)
@@ -17,13 +17,29 @@ program
     .option('--token <token>', 'Api key', process.env.GITLAB_API_TOKEN)
     .option('--project-id <id>', 'Project Id', process.env.CI_PROJECT_ID)
     .option('--tag-name <tag>', 'Tag name', 'auto')
-    .option('--ref <ref>', 'Git ref', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF)
+    .option('--ref <ref>', 'Git ref', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF || 'auto')
     .option('--apk <name>', 'Apk file to find version - default app/build/outputs/apk/app-release.apk', (process.env.PROJECT_FOLDER || process.cwd()) + '/app/build/outputs/apk/app-release.apk')
     .option('--appVersion <appVersion>', 'Set the version to tag, will have build number added')
     .option('-n, --notes <notes>', 'Release notes', 'auto')
     .parse(process.argv)
 
 var buildNumber = (process.env.CI_JOB_ID || process.env.CI_BUILD_ID || '1')
+
+if (program.notes === 'auto') {
+  program.notes = git.commit()
+}
+
+if (!program.server) {
+  throw new Error('Missing GitLab server')
+}
+
+if (!program.token) {
+  throw new Error('Missing GitLab token')
+}
+
+if (!program.projectId) {
+  throw new Error('Missing GitLab Project Id')
+}
 
 if (program.tagName === 'auto') {
   if (program.appVersion) {
@@ -42,23 +58,19 @@ if (program.tagName === 'auto') {
   }
 }
 
-if (program.notes === 'auto') {
-  program.notes = commit()
+if (!program.tagName) {
+  throw new Error('Missing tag name')
 }
 
-if (!program.token) {
-  throw new Error('Missing GitLab token')
+if (program.ref === 'auto') {
+  try {
+    program.ref = git.ref()
+  } catch (e) {
+    throw new Error('Missing git ref')
+  }
 }
 
-if (!program.server) {
-  throw new Error('Missing GitLab server')
-}
-
-if (!program.projectId) {
-  throw new Error('Missing GitLab Project Id')
-}
-
-winston.info('Creating release')
+winston.info('Creating release: ' + program.tagName)
 
 var data = new FormData()
 data.append('tag_name', program.tagName)

@@ -8,7 +8,7 @@ var fs = require('fs')
 var winston = require('winston')
 var program = require('commander')
 
-var commit = require('./lib/commit')
+var git = require('./lib/git')
 var slack = require('./lib/slack')
 
 program
@@ -23,11 +23,43 @@ program
     .option('-c, --slack-channel <channel>', 'Slack Channel - default SLACK_CHANNEL', process.env.SLACK_CHANNEL)
     .option('-m, --message <message>', 'Test build rocks message', 'auto')
     .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_COMMIT_REF_SLUG || process.env.CI_BUILD_REF_SLUG)
-    .option('-c, --commit <commit>', 'Test build rocks git commit', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF)
+    .option('-c, --commit <commit>', 'Test build rocks git commit', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF || 'auto')
     .parse(process.argv)
 
+if (!program.projectId) {
+  throw new Error('Missing GitLab Project Id')
+}
+
+if (!program.ipa) {
+  throw new Error('Missing Ipa file')
+}
+
+if (!fs.existsSync(program.ipa)) {
+  throw new Error('Ipa file doesnt exist')
+}
+
+if (!program.key) {
+  throw new Error('Missing Test build rocks token')
+}
+
 if (program.message === 'auto') {
-  program.message = commit()
+  program.message = git.commit()
+}
+
+if (program.ref === 'auto') {
+  try {
+    program.ref = git.branch()
+  } catch (e) {
+    program.ref = ''
+  }
+}
+
+if (program.commit === 'auto') {
+  try {
+    program.commit = git.ref()
+  } catch (e) {
+    program.commit = ''
+  }
 }
 
 winston.info('Uploading build')
