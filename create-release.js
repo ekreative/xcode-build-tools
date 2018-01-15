@@ -20,10 +20,13 @@ program
     .option('--ref <ref>', 'Git ref', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF || 'auto')
     .option('--apk <name>', 'Apk file to find version - default app/build/outputs/apk/app-release.apk', (process.env.PROJECT_FOLDER || process.cwd()) + '/app/build/outputs/apk/app-release.apk')
     .option('--appVersion <appVersion>', 'Set the version to tag, will have build number added')
+    .option('--build-number <build>', 'Set the build number to use', process.env.CI_JOB_ID || process.env.CI_BUILD_ID || '1')
     .option('-n, --notes <notes>', 'Release notes', 'auto')
     .parse(process.argv)
 
-var buildNumber = (process.env.CI_JOB_ID || process.env.CI_BUILD_ID || '1')
+if (!program.buildNumber) {
+  throw new Error('Missing build number')
+}
 
 if (program.notes === 'auto') {
   program.notes = git.commit()
@@ -43,16 +46,16 @@ if (!program.projectId) {
 
 if (program.tagName === 'auto') {
   if (program.appVersion) {
-    program.tagName = 'v' + program.version + '-' + buildNumber
+    program.tagName = 'v' + program.version + '-' + program.buildNumber
   } else {
     try {
-      program.tagName = 'v' + iosVersion() + '-' + buildNumber
+      program.tagName = 'v' + iosVersion() + '-' + program.buildNumber
     } catch (e) {
       try {
-        program.tagName = 'v' + androidVersion(program.apk) + '-' + buildNumber
+        program.tagName = 'v' + androidVersion(program.apk) + '-' + program.buildNumber
       } catch (e) {
         var date = new Date()
-        program.tagName = [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()].map(leadingZero).join('-') + '.' + buildNumber
+        program.tagName = [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()].map(leadingZero).join('-') + '.' + program.buildNumber
       }
     }
   }
