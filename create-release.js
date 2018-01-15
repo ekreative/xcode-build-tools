@@ -115,7 +115,7 @@ function leadingZero (val) {
 }
 
 function iosVersion () {
-  return ('' + execSync('agvtool what-marketing-version -terse1')).trim()
+  return ('' + execSync('agvtool what-marketing-version -terse1')).trim().split('\n').pop()
 }
 
 function androidVersion (apk) {
