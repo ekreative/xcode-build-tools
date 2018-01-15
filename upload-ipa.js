@@ -24,6 +24,7 @@ program
     .option('-m, --message <message>', 'Test build rocks message', 'auto')
     .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_COMMIT_REF_SLUG || process.env.CI_BUILD_REF_SLUG)
     .option('-c, --commit <commit>', 'Test build rocks git commit', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF || 'auto')
+    .option('--job-name <job>', 'Build job name', process.env.CI_JOB_NAME || '')
     .parse(process.argv)
 
 if (!program.projectId) {
@@ -70,6 +71,7 @@ data.append('comment', program.message)
 data.append('ci', 'true')
 data.append('ref', program.ref)
 data.append('commit', program.commit)
+data.append('job-name', program.jobName)
 
 data.getLengthSync = null // Work around until https://github.com/bitinn/node-fetch/issues/102
 
