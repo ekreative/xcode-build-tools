@@ -25,16 +25,17 @@
     "ensure-login-keychain": "./ensure-login-keychain.js"
   },
   "dependencies": {
-    "commander": "^2.11.0",
-    "cpr": "^2.2.0",
+    "commander": "^2.16.0",
+    "cpr": "^3.0.1",
     "del": "^3.0.0",
-    "form-data": "^2.3.1",
-    "moment": "^2.19.2",
-    "node-fetch": "^1.7.3",
-    "standard": "^10.0.3",
-    "winston": "^2.4.0"
+    "form-data": "^2.3.2",
+    "moment": "^2.22.2",
+    "node-fetch": "^2.1.2",
+    "winston": "^3.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "standard": "^11.0.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ekreative/xcode-build-tools.git"
