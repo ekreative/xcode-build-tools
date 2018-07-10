@@ -82,7 +82,7 @@ data.append('release_description', program.notes)
 
 data.getLengthSync = null // Work around until https://github.com/bitinn/node-fetch/issues/102
 
-var result = fetch(program.server + '/api/v3/projects/' + program.projectId + '/repository/tags', {
+var result = fetch(program.server + '/api/v4/projects/' + program.projectId + '/repository/tags', {
   method: 'POST',
   body: data,
   headers: {
