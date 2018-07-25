@@ -24,8 +24,6 @@ program
   .option('-n, --notes <notes>', 'Release notes', 'auto')
   .parse(process.argv)
 
-logger.info('hello')
-
 if (!program.buildNumber) {
   throw new Error('Missing build number')
 }
