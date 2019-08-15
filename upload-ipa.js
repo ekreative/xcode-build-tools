@@ -22,7 +22,7 @@ program
   .option('-s, --slack-hook <hook>', 'Slack Hook - default SLACK_URL', process.env.SLACK_URL || process.env.SLACK_HOOK)
   .option('-c, --slack-channel <channel>', 'Slack Channel - default SLACK_CHANNEL', process.env.SLACK_CHANNEL)
   .option('-m, --message <message>', 'Test build rocks message', 'auto')
-  .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_COMMIT_REF_SLUG || process.env.CI_BUILD_REF_SLUG)
+  .option('-r, --ref <ref>', 'Test build rocks git ref', process.env.CI_COMMIT_REF_SLUG || process.env.CI_BUILD_REF_SLUG || 'auto')
   .option('-c, --commit <commit>', 'Test build rocks git commit', process.env.CI_COMMIT_SHA || process.env.CI_BUILD_REF || 'auto')
   .option('--job-name <job>', 'Build job name', process.env.CI_JOB_NAME || '')
   .parse(process.argv)
